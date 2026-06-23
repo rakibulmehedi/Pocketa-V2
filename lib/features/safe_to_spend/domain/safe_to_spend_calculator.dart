@@ -25,6 +25,9 @@ class SafeToSpendCalculator {
     double expectedIncome = 0.0;
     double excludedUsdIncome = 0.0;
     int excludedUsdEntryCount = 0;
+    // H-40: collect human-readable warnings for entries excluded due to
+    // missing or invalid FX rates.
+    final List<String> excludedWarnings = [];
 
     for (final entry in incomeEntries) {
       // UX-3.08: skip entries explicitly excluded by the user
@@ -40,9 +43,11 @@ class SafeToSpendCalculator {
           if (entry.fxRate != null && entry.fxRate! > 0) {
             totalReceivedIncomeBdt += entry.amount * entry.fxRate!;
           } else {
-            // No FX rate set or invalid rate → still excluded (shown for transparency)
+            // No FX rate set or invalid rate → excluded (shown for transparency)
             excludedUsdIncome += entry.amount;
             excludedUsdEntryCount++;
+            // H-40: record a human-readable warning for dashboard display.
+            excludedWarnings.add('${entry.clientName}: missing FX rate');
           }
         }
       } else if (entry.status == IncomeStatus.pending) {
@@ -95,6 +100,7 @@ class SafeToSpendCalculator {
       horizonNumber: horizonNumber,
       excludedUsdIncome: excludedUsdIncome,
       excludedUsdEntryCount: excludedUsdEntryCount,
+      excludedWarnings: excludedWarnings,
     );
   }
 

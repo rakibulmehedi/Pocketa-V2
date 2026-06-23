@@ -2149,6 +2149,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warning'**
   String get cautionWarning;
+
+  /// H-24: security warning shown above the CSV export button
+  ///
+  /// In en, this message translates to:
+  /// **'CSV export contains unencrypted financial data. Only share with trusted recipients.'**
+  String get csvExportWarning;
+
+  /// H-39: confirmation dialog title before deleting an item
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm deletion'**
+  String get deleteConfirmTitle;
+
+  /// H-39: confirm delete action label in confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
 }
 
 class _AppLocalizationsDelegate

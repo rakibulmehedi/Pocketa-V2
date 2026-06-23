@@ -63,6 +63,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _currentStep = 0;
   OnboardingDraft _draft = const OnboardingDraft();
 
+  @override
+  void initState() {
+    super.initState();
+    // H-21: If onboarding was already completed, skip straight to home.
+    // Guards against re-running onboarding on back-navigation after completion.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (SharedPrefServices.getOnboardingCompleted()) {
+        context.go(RouteNames.home);
+      }
+    });
+  }
+
   void _goToStep(int step) {
     setState(() => _currentStep = step);
     _pageController.animateToPage(

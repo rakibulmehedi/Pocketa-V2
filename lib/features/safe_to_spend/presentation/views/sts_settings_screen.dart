@@ -211,6 +211,28 @@ class StsSettingsScreen extends ConsumerWidget {
                       color: colors.stateAtRisk,
                       child: Icon(Icons.delete, color: colors.surface),
                     ),
+                    // H-39: require explicit confirmation before deleting.
+                    confirmDismiss: (_) async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: Text(loc.deleteConfirmTitle),
+                          actions: [
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(context, false),
+                              child: Text(loc.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.pop(context, true),
+                              child: Text(loc.delete),
+                            ),
+                          ],
+                        ),
+                      );
+                      return confirmed == true;
+                    },
                     onDismissed: (_) {
                       ref
                           .read(fixedCostNotifierProvider.notifier)

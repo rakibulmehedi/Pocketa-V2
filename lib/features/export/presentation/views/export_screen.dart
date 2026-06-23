@@ -108,7 +108,23 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
             ),
             const SizedBox(height: 8),
             ..._exportItems(context, colors),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+            // H-24: plaintext security warning above the export button.
+            Container(
+              padding: const EdgeInsets.all(HelmSpacing.s3),
+              decoration: BoxDecoration(
+                color: colors.stateAtRisk.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(HelmSpacing.s2),
+                border: Border.all(
+                  color: colors.stateAtRisk.withValues(alpha: 0.24),
+                ),
+              ),
+              child: Text(
+                l10n.csvExportWarning,
+                style: typo.bodySm.copyWith(color: colors.inkSecondary),
+              ),
+            ),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

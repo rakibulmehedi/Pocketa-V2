@@ -274,7 +274,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify we start at 0%.
-      OnboardingProgressLine progressBefore =
+      final OnboardingProgressLine progressBefore =
           tester.widget<OnboardingProgressLine>(
         find.byType(OnboardingProgressLine),
       );

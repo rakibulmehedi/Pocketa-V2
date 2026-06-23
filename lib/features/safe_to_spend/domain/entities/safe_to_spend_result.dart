@@ -45,6 +45,11 @@ class SafeToSpendResult {
   /// but should not be trusted; callers should display [error] instead.
   final String? error;
 
+  /// H-40: Human-readable warnings for entries excluded from Safe-to-Spend
+  /// due to missing or invalid FX rates. Each entry is formatted as
+  /// "${clientName}: missing FX rate".
+  final List<String> excludedWarnings;
+
   const SafeToSpendResult({
     required this.liquidCash,
     required this.totalReceivedIncomeBdt,
@@ -60,6 +65,7 @@ class SafeToSpendResult {
     required this.excludedUsdIncome,
     required this.excludedUsdEntryCount,
     this.error,
+    this.excludedWarnings = const [],
   });
 
   const SafeToSpendResult.zero()
@@ -76,7 +82,8 @@ class SafeToSpendResult {
         horizonNumber = 0,
         excludedUsdIncome = 0,
         excludedUsdEntryCount = 0,
-        error = null;
+        error = null,
+        excludedWarnings = const [];
 
   /// Factory that surfaces a calculation failure instead of hiding it as zero.
   const SafeToSpendResult._failure(this.error)
@@ -92,7 +99,8 @@ class SafeToSpendResult {
         expectedIncome = 0,
         horizonNumber = 0,
         excludedUsdIncome = 0,
-        excludedUsdEntryCount = 0;
+        excludedUsdEntryCount = 0,
+        excludedWarnings = const [];
 
   /// Named factory for callers that want to construct a failure result.
   factory SafeToSpendResult.failure(String error) =>

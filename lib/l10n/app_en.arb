@@ -1149,5 +1149,14 @@
   "@cautionCritical": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=true" },
 
   "cautionWarning": "Warning",
-  "@cautionWarning": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=false" }
+  "@cautionWarning": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=false" },
+
+  "csvExportWarning": "CSV export contains unencrypted financial data. Only share with trusted recipients.",
+  "@csvExportWarning": { "description": "H-24: security warning shown above the CSV export button" },
+
+  "deleteConfirmTitle": "Confirm deletion",
+  "@deleteConfirmTitle": { "description": "H-39: confirmation dialog title before deleting an item" },
+
+  "delete": "Delete",
+  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" }
 }

@@ -4,61 +4,61 @@ import 'package:helm/core/utils/number_formatter.dart';
 void main() {
   group('NumberFormatter.formatBDT', () {
     test('formats zero', () {
-      expect(NumberFormatter.formatBDT(0), 'tk 0.00');
+      expect(NumberFormatter.formatBDT(0), '৳ 0.00');
     });
 
     test('formats small amount (< 1,000)', () {
-      expect(NumberFormatter.formatBDT(500), 'tk 500.00');
+      expect(NumberFormatter.formatBDT(500), '৳ 500.00');
     });
 
     test('formats thousands with 3-digit grouping', () {
-      expect(NumberFormatter.formatBDT(36000), 'tk 36,000.00');
+      expect(NumberFormatter.formatBDT(36000), '৳ 36,000.00');
     });
 
     test('formats lakh with 2-digit grouping', () {
-      expect(NumberFormatter.formatBDT(100000), 'tk 1,00,000.00');
+      expect(NumberFormatter.formatBDT(100000), '৳ 1,00,000.00');
     });
 
     test('formats 15 lakh', () {
-      expect(NumberFormatter.formatBDT(1500000), 'tk 15,00,000.00');
+      expect(NumberFormatter.formatBDT(1500000), '৳ 15,00,000.00');
     });
 
     test('formats crore with lakh/crore grouping', () {
-      expect(NumberFormatter.formatBDT(10000000), 'tk 1,00,00,000.00');
+      expect(NumberFormatter.formatBDT(10000000), '৳ 1,00,00,000.00');
     });
 
     test('formats with decimal precision', () {
-      expect(NumberFormatter.formatBDT(12345.67), 'tk 12,345.67');
+      expect(NumberFormatter.formatBDT(12345.67), '৳ 12,345.67');
     });
 
     test('formats 99999 (just under lakh)', () {
-      expect(NumberFormatter.formatBDT(99999), 'tk 99,999.00');
+      expect(NumberFormatter.formatBDT(99999), '৳ 99,999.00');
     });
   });
 
   group('NumberFormatter.formatBDTCompact', () {
     test('formats below lakh without suffix', () {
-      expect(NumberFormatter.formatBDTCompact(36000), 'tk 36,000');
+      expect(NumberFormatter.formatBDTCompact(36000), '৳ 36,000');
     });
 
     test('formats 1 lakh with L suffix', () {
-      expect(NumberFormatter.formatBDTCompact(100000), 'tk 1.00L');
+      expect(NumberFormatter.formatBDTCompact(100000), '৳ 1.00L');
     });
 
     test('formats 5.5 lakh with L suffix', () {
-      expect(NumberFormatter.formatBDTCompact(550000), 'tk 5.50L');
+      expect(NumberFormatter.formatBDTCompact(550000), '৳ 5.50L');
     });
 
     test('formats 1 crore with Cr suffix', () {
-      expect(NumberFormatter.formatBDTCompact(10000000), 'tk 1.00Cr');
+      expect(NumberFormatter.formatBDTCompact(10000000), '৳ 1.00Cr');
     });
 
     test('formats 2.5 crore with Cr suffix', () {
-      expect(NumberFormatter.formatBDTCompact(25000000), 'tk 2.50Cr');
+      expect(NumberFormatter.formatBDTCompact(25000000), '৳ 2.50Cr');
     });
 
     test('formats zero compact', () {
-      expect(NumberFormatter.formatBDTCompact(0), 'tk 0');
+      expect(NumberFormatter.formatBDTCompact(0), '৳ 0');
     });
   });
 
@@ -82,29 +82,33 @@ void main() {
 
   group('NumberFormatter.formatFXRate', () {
     test('formats standard rate', () {
-      expect(NumberFormatter.formatFXRate(119.66), 'tk 119.66');
+      expect(NumberFormatter.formatFXRate(119.66), '৳ 119.66');
     });
 
     test('formats round rate', () {
-      expect(NumberFormatter.formatFXRate(120), 'tk 120.00');
+      expect(NumberFormatter.formatFXRate(120), '৳ 120.00');
     });
   });
 
   group('NumberFormatter.parseBDT', () {
-    test('parses standard formatted BDT', () {
+    test('parses standard formatted BDT with ৳ prefix', () {
+      expect(NumberFormatter.parseBDT('৳ 36,000.00'), 36000.0);
+    });
+
+    test('parses lakh formatted BDT with ৳ prefix', () {
+      expect(NumberFormatter.parseBDT('৳ 1,00,000.00'), 100000.0);
+    });
+
+    test('parses compact lakh with ৳ prefix', () {
+      expect(NumberFormatter.parseBDT('৳ 5.50L'), 550000.0);
+    });
+
+    test('parses compact crore with ৳ prefix', () {
+      expect(NumberFormatter.parseBDT('৳ 1.00Cr'), 10000000.0);
+    });
+
+    test('parses legacy tk prefix for backwards compatibility', () {
       expect(NumberFormatter.parseBDT('tk 36,000.00'), 36000.0);
-    });
-
-    test('parses lakh formatted BDT', () {
-      expect(NumberFormatter.parseBDT('tk 1,00,000.00'), 100000.0);
-    });
-
-    test('parses compact lakh', () {
-      expect(NumberFormatter.parseBDT('tk 5.50L'), 550000.0);
-    });
-
-    test('parses compact crore', () {
-      expect(NumberFormatter.parseBDT('tk 1.00Cr'), 10000000.0);
     });
 
     test('returns null for invalid input', () {

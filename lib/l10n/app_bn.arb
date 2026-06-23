@@ -983,5 +983,14 @@
   "@cautionCritical": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=true" },
 
   "cautionWarning": "সতর্কতা",
-  "@cautionWarning": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=false" }
+  "@cautionWarning": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=false" },
+
+  "csvExportWarning": "CSV এক্সপোর্টে আনএনক্রিপ্টেড আর্থিক তথ্য রয়েছে। শুধুমাত্র বিশ্বস্ত প্রাপকদের সাথে শেয়ার করুন।",
+  "@csvExportWarning": { "description": "H-24: security warning shown above the CSV export button" },
+
+  "deleteConfirmTitle": "মুছে ফেলা নিশ্চিত করুন",
+  "@deleteConfirmTitle": { "description": "H-39: confirmation dialog title before deleting an item" },
+
+  "delete": "মুছুন",
+  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" }
 }

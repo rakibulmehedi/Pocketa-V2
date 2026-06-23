@@ -1156,4 +1156,14 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get cautionWarning => 'সতর্কতা';
+
+  @override
+  String get csvExportWarning =>
+      'CSV এক্সপোর্টে আনএনক্রিপ্টেড আর্থিক তথ্য রয়েছে। শুধুমাত্র বিশ্বস্ত প্রাপকদের সাথে শেয়ার করুন।';
+
+  @override
+  String get deleteConfirmTitle => 'মুছে ফেলা নিশ্চিত করুন';
+
+  @override
+  String get delete => 'মুছুন';
 }

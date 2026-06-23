@@ -1167,4 +1167,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cautionWarning => 'Warning';
+
+  @override
+  String get csvExportWarning =>
+      'CSV export contains unencrypted financial data. Only share with trusted recipients.';
+
+  @override
+  String get deleteConfirmTitle => 'Confirm deletion';
+
+  @override
+  String get delete => 'Delete';
 }
