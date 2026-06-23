@@ -941,9 +941,9 @@
   "auditRelativeMinutesAgo": "{minutes} মিনিট আগে",
   "auditRelativeHoursAgo": "{hours} ঘণ্টা আগে",
   "spendTitle": "ব্যয়",
-  "spendSummaryLabel": "এই মাসে ব্যয় · Safe-to-Spend কমায়",
+  "spendSummaryLabel": "এই মাসে ব্যয় · নিরাপদ ব্যয়সীমা কমায়",
   "spendEmptyTitle": "এখনো কিছু ব্যয় হয়নি",
-  "spendEmptyBody": "আপনি যে অর্থ ইতিমধ্যে পরিশোধ করেছেন তা রেকর্ড করুন — প্রতিটি পেমেন্ট আপনার Safe-to-Spend আপডেট করে।",
+  "spendEmptyBody": "আপনি যে অর্থ ইতিমধ্যে পরিশোধ করেছেন তা রেকর্ড করুন — প্রতিটি পেমেন্ট আপনার নিরাপদ ব্যয়সীমা আপডেট করে।",
   "spendFabLabel": "পেমেন্ট যোগ করুন",
 
   "tabHome": "হোম",
@@ -992,5 +992,19 @@
   "@deleteConfirmTitle": { "description": "H-39: confirmation dialog title before deleting an item" },
 
   "delete": "মুছুন",
-  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" }
+  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" },
+
+  "rateLimitError": "অনেকবার চেষ্টা হয়েছে। ১ মিনিট পরে আবার চেষ্টা করুন।",
+  "@rateLimitError": { "description": "M-33: rate limit error shown when too many auth attempts occur" },
+
+  "accountLockedError": "অ্যাকাউন্ট সাময়িক বন্ধ। {minutes} মিনিট পরে আবার চেষ্টা করুন।",
+  "@accountLockedError": {
+    "description": "M-33: account lockout error with time remaining",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+
+  "exportError": "রপ্তানি ব্যর্থ হয়েছে। স্টোরেজ পার্মিশন চেক করুন।",
+  "@exportError": { "description": "M-33: user-friendly export failure message" }
 }

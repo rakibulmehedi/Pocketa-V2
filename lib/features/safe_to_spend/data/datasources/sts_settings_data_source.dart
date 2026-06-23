@@ -144,10 +144,12 @@ class StsSettingsDataSourceImpl implements StsSettingsDataSource {
       } else {
         // Absolute BDT value: estimate as a percentage of a baseline balance.
         migrated = (oldVal / 50000.0 * 100).clamp(5.0, 30.0);
-        debugPrint(
-          '[StsSettings] buffer migrated from absolute BDT to %: '
-          '${oldVal.toStringAsFixed(0)} BDT → ${migrated.toStringAsFixed(1)}%',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '[StsSettings] buffer migrated from absolute BDT to %: '
+            '${oldVal.toStringAsFixed(0)} BDT → ${migrated.toStringAsFixed(1)}%',
+          );
+        }
       }
       await prefs.setDouble(_bufferPercentKey, migrated);
       await prefs.setDouble('${_legacyBufferKey}_backup_bdt', oldVal);

@@ -23,6 +23,8 @@ class SafeToSpendCalculator {
     double totalReceivedIncomeBdt = 0.0;
     double pendingIncome = 0.0;
     double expectedIncome = 0.0;
+    // Entries excluded by user toggle (excludeFromCalculation=true).
+    // Distinct from excludedWarnings which tracks entries missing fxRate.
     double excludedUsdIncome = 0.0;
     int excludedUsdEntryCount = 0;
     // H-40: collect human-readable warnings for entries excluded due to

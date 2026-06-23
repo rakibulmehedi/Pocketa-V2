@@ -1105,14 +1105,14 @@ class AppLocalizationsBn extends AppLocalizations {
   String get spendTitle => 'ব্যয়';
 
   @override
-  String get spendSummaryLabel => 'এই মাসে ব্যয় · Safe-to-Spend কমায়';
+  String get spendSummaryLabel => 'এই মাসে ব্যয় · নিরাপদ ব্যয়সীমা কমায়';
 
   @override
   String get spendEmptyTitle => 'এখনো কিছু ব্যয় হয়নি';
 
   @override
   String get spendEmptyBody =>
-      'আপনি যে অর্থ ইতিমধ্যে পরিশোধ করেছেন তা রেকর্ড করুন — প্রতিটি পেমেন্ট আপনার Safe-to-Spend আপডেট করে।';
+      'আপনি যে অর্থ ইতিমধ্যে পরিশোধ করেছেন তা রেকর্ড করুন — প্রতিটি পেমেন্ট আপনার নিরাপদ ব্যয়সীমা আপডেট করে।';
 
   @override
   String get spendFabLabel => 'পেমেন্ট যোগ করুন';
@@ -1166,4 +1166,16 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get delete => 'মুছুন';
+
+  @override
+  String get rateLimitError =>
+      'অনেকবার চেষ্টা হয়েছে। ১ মিনিট পরে আবার চেষ্টা করুন।';
+
+  @override
+  String accountLockedError(int minutes) {
+    return 'অ্যাকাউন্ট সাময়িক বন্ধ। $minutes মিনিট পরে আবার চেষ্টা করুন।';
+  }
+
+  @override
+  String get exportError => 'রপ্তানি ব্যর্থ হয়েছে। স্টোরেজ পার্মিশন চেক করুন।';
 }

@@ -11,6 +11,7 @@
 //   - Cancel is always available
 //   - After deletion: navigates to /welcome (full reset)
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -74,23 +75,29 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
             await Hive.deleteBoxFromDisk(name);
           }
         } on Exception catch (e, st) {
-          debugPrint('[DELETE_ACCOUNT] failed to clear box $name: $e\n$st');
+          if (kDebugMode) {
+            debugPrint('[DELETE_ACCOUNT] failed to clear box $name: $e\n$st');
+          }
         }
       }
 
       try {
         await SecureKeyManager().deleteHiveKey();
       } on Exception catch (e, st) {
-        debugPrint('[DELETE_ACCOUNT] failed to delete Hive key: $e\n$st');
+        if (kDebugMode) {
+          debugPrint('[DELETE_ACCOUNT] failed to delete Hive key: $e\n$st');
+        }
       }
 
       try {
         final prefs = await SharedPreferences.getInstance();
         await prefs.clear();
       } on Exception catch (e, st) {
-        debugPrint(
-          '[DELETE_ACCOUNT] failed to clear SharedPreferences: $e\n$st',
-        );
+        if (kDebugMode) {
+          debugPrint(
+            '[DELETE_ACCOUNT] failed to clear SharedPreferences: $e\n$st',
+          );
+        }
       }
 
       // D2P — Beta instrumentation: account deleted (irreversible data wipe)
@@ -101,7 +108,9 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
     } on Exception catch (e, st) {
       // H-29: surface incomplete deletion to the user so they can retry or
       // contact support rather than silently leaving data behind.
-      debugPrint('[DELETE_ACCOUNT] deletion sequence failed: $e\n$st');
+      if (kDebugMode) {
+        debugPrint('[DELETE_ACCOUNT] deletion sequence failed: $e\n$st');
+      }
       if (mounted) {
         setState(() => _deleting = false);
         ScaffoldMessenger.of(context).showSnackBar(

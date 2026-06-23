@@ -1177,4 +1177,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete => 'Delete';
+
+  @override
+  String get rateLimitError => 'Too many attempts. Please wait 1 minute.';
+
+  @override
+  String accountLockedError(int minutes) {
+    return 'Account temporarily locked. Try again in $minutes minutes.';
+  }
+
+  @override
+  String get exportError => 'Export failed. Check storage permissions.';
 }

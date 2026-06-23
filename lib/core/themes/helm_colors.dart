@@ -45,7 +45,9 @@ class HelmColors extends ThemeExtension<HelmColors> {
     surface:        Color(0xFFEAE0D0), // cards, elevated panels
     inkPrimary:     Color(0xFF2B2521), // numbers, critical text
     inkSecondary:   Color(0xFF5C5247), // labels, timestamps
-    inkTertiary:    Color(0xFF8A7A5E), // helper text, metadata
+    // WCAG AA 4.5:1 verified against canvas background (#F3ECE0).
+    // #8A7A5E was ~3.5:1 (fail). Darkened to #6B5C42 → ~5.6:1 (pass).
+    inkTertiary:    Color(0xFF6B5C42), // helper text, metadata
     interactive:    Color(0xFFC2603F), // terracotta — tappable affordances
     divider:        Color(0xFFDED2BF), // card borders
     hairline:       Color(0xFFE8DECB), // internal dividers

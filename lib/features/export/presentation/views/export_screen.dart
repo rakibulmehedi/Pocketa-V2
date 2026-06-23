@@ -38,11 +38,10 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         notifier.reset();
       } else if (next == ExportStatus.error) {
         final notifier = ref.read(exportProvider.notifier);
+        // M-33: use user-friendly export error message instead of raw error.
         HelmToast.show(
           context,
-          message: l10n.exportFailed(
-            notifier.lastResult?.errorMessage ?? 'Unknown error',
-          ),
+          message: l10n.exportError,
           type: ToastType.error,
         );
         notifier.reset();

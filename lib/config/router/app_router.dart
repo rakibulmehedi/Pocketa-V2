@@ -184,6 +184,13 @@ final GoRouter appRouter = GoRouter(
       name: 'trace',
       builder: (context, state) => const AuditLogScreen(),
     ),
+    // /history (M-13): Settings + History AppBar actions use this path.
+    // Resolves to AuditLogScreen, same as /audit-log and /trace.
+    GoRoute(
+      path: RouteNames.history,
+      name: 'history',
+      builder: (context, state) => const AuditLogScreen(),
+    ),
 
     // ── Account management (D1.10) ────────────────────────────────────────────
     GoRoute(

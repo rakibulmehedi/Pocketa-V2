@@ -2167,6 +2167,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get delete;
+
+  /// M-33: rate limit error shown when too many auth attempts occur
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait 1 minute.'**
+  String get rateLimitError;
+
+  /// M-33: account lockout error with time remaining
+  ///
+  /// In en, this message translates to:
+  /// **'Account temporarily locked. Try again in {minutes} minutes.'**
+  String accountLockedError(int minutes);
+
+  /// M-33: user-friendly export failure message
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed. Check storage permissions.'**
+  String get exportError;
 }
 
 class _AppLocalizationsDelegate

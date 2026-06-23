@@ -264,6 +264,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               tooltip: context.l10n.devResetOnboarding,
               icon: const Icon(Icons.refresh_rounded, size: 20),
               onPressed: () async {
+                // M-30: confirmation dialog prevents accidental resets.
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text('Reset all data?'),
+                    content: const Text(
+                      'This will delete all income, transactions, and settings. '
+                      'Cannot be undone.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Reset'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed != true) return;
                 await SharedPrefServices.setOnboardingCompleted(false);
                 if (context.mounted) context.go(RouteNames.welcome);
               },

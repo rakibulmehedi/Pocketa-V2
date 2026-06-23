@@ -1158,5 +1158,19 @@
   "@deleteConfirmTitle": { "description": "H-39: confirmation dialog title before deleting an item" },
 
   "delete": "Delete",
-  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" }
+  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" },
+
+  "rateLimitError": "Too many attempts. Please wait 1 minute.",
+  "@rateLimitError": { "description": "M-33: rate limit error shown when too many auth attempts occur" },
+
+  "accountLockedError": "Account temporarily locked. Try again in {minutes} minutes.",
+  "@accountLockedError": {
+    "description": "M-33: account lockout error with time remaining",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+
+  "exportError": "Export failed. Check storage permissions.",
+  "@exportError": { "description": "M-33: user-friendly export failure message" }
 }
