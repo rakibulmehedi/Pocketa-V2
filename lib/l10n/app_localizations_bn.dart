@@ -1178,4 +1178,14 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get exportError => 'রপ্তানি ব্যর্থ হয়েছে। স্টোরেজ পার্মিশন চেক করুন।';
+
+  @override
+  String get exportWarningTitle => 'আর্থিক তথ্য শেয়ার করা হচ্ছে';
+
+  @override
+  String get exportWarningBody =>
+      'আপনার আর্থিক তথ্য শেয়ার করতে যাচ্ছেন। শুধুমাত্র বিশ্বস্ত ব্যক্তির সাথে শেয়ার করুন।';
+
+  @override
+  String get ok => 'ঠিক আছে';
 }

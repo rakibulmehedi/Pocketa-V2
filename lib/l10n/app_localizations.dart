@@ -2185,6 +2185,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export failed. Check storage permissions.'**
   String get exportError;
+
+  /// L-9: one-time pre-share warning dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing financial data'**
+  String get exportWarningTitle;
+
+  /// L-9: one-time pre-share warning dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to share financial data. Only share with trusted recipients.'**
+  String get exportWarningBody;
+
+  /// Generic acknowledgement button label
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

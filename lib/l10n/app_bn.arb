@@ -1006,5 +1006,14 @@
   },
 
   "exportError": "রপ্তানি ব্যর্থ হয়েছে। স্টোরেজ পার্মিশন চেক করুন।",
-  "@exportError": { "description": "M-33: user-friendly export failure message" }
+  "@exportError": { "description": "M-33: user-friendly export failure message" },
+
+  "exportWarningTitle": "আর্থিক তথ্য শেয়ার করা হচ্ছে",
+  "@exportWarningTitle": { "description": "L-9: one-time pre-share warning dialog title" },
+
+  "exportWarningBody": "আপনার আর্থিক তথ্য শেয়ার করতে যাচ্ছেন। শুধুমাত্র বিশ্বস্ত ব্যক্তির সাথে শেয়ার করুন।",
+  "@exportWarningBody": { "description": "L-9: one-time pre-share warning dialog body" },
+
+  "ok": "ঠিক আছে",
+  "@ok": { "description": "Generic acknowledgement button label" }
 }

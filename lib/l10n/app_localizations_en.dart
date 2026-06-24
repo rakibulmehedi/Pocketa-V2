@@ -1188,4 +1188,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportError => 'Export failed. Check storage permissions.';
+
+  @override
+  String get exportWarningTitle => 'Sharing financial data';
+
+  @override
+  String get exportWarningBody =>
+      'You are about to share financial data. Only share with trusted recipients.';
+
+  @override
+  String get ok => 'OK';
 }

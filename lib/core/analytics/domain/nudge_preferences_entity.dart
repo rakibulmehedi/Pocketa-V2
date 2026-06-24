@@ -27,8 +27,9 @@ class NudgePreferencesEntity {
   });
 
   factory NudgePreferencesEntity.defaults() {
+    // L-11: default to weekly so users opt-in to daily notifications.
     return const NudgePreferencesEntity(
-      cadence: Cadence.daily,
+      cadence: Cadence.weekly,
       checkInTime: TimeOfDay(hour: 9, minute: 0),
       pushEnabled: true,
       inAppEnabled: true,

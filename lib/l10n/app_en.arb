@@ -1172,5 +1172,14 @@
   },
 
   "exportError": "Export failed. Check storage permissions.",
-  "@exportError": { "description": "M-33: user-friendly export failure message" }
+  "@exportError": { "description": "M-33: user-friendly export failure message" },
+
+  "exportWarningTitle": "Sharing financial data",
+  "@exportWarningTitle": { "description": "L-9: one-time pre-share warning dialog title" },
+
+  "exportWarningBody": "You are about to share financial data. Only share with trusted recipients.",
+  "@exportWarningBody": { "description": "L-9: one-time pre-share warning dialog body" },
+
+  "ok": "OK",
+  "@ok": { "description": "Generic acknowledgement button label" }
 }

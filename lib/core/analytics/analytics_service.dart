@@ -29,6 +29,9 @@ abstract class AnalyticsService {
 class LocalAnalyticsService implements AnalyticsService {
   final AnalyticsRepository _repository;
 
+  // L-7: static lock flag to prevent concurrent double-writes to dailyActiveSession.
+  static bool _trackingSession = false;
+
   const LocalAnalyticsService({
     required AnalyticsRepository repository,
   }) : _repository = repository;
@@ -37,12 +40,18 @@ class LocalAnalyticsService implements AnalyticsService {
   void trackEvent(String name, {Map<String, dynamic>? properties}) {
     // Session deduplication: daily_active_session fires only once per calendar day.
     if (name == BoundaryEvents.dailyActiveSession) {
-      final todayStr = DateTime.now().toIso8601String().substring(0, 10);
-      final lastDate = SharedPrefServices.getLastSessionDate();
-      if (lastDate == todayStr) {
-        return; // Deduplicate
+      if (_trackingSession) return;
+      _trackingSession = true;
+      try {
+        final todayStr = DateTime.now().toIso8601String().substring(0, 10);
+        final lastDate = SharedPrefServices.getLastSessionDate();
+        if (lastDate == todayStr) {
+          return; // Deduplicate
+        }
+        SharedPrefServices.setLastSessionDate(todayStr);
+      } finally {
+        _trackingSession = false;
       }
-      SharedPrefServices.setLastSessionDate(todayStr);
     }
 
     final propsMap = properties?.map((k, v) => MapEntry(k, v.toString())) ??
@@ -54,6 +63,9 @@ class LocalAnalyticsService implements AnalyticsService {
       debugPrint('[BETA_EVENT] $name$propsStr');
     }
 
+    // L-8: trackEvent is void (synchronous interface); repository.save is
+    // fire-and-forget. Analytics loss on failure is acceptable for MVP.
+    // ignore: unawaited_futures
     _repository.save(AnalyticsEventEntity(
       eventName: name,
       timestamp: DateTime.now().toUtc(),
@@ -67,6 +79,8 @@ class LocalAnalyticsService implements AnalyticsService {
       debugPrint('[BETA_EVENT] screen_view | {screen: $name}');
     }
 
+    // L-8: fire-and-forget — same rationale as trackEvent above.
+    // ignore: unawaited_futures
     _repository.save(AnalyticsEventEntity(
       eventName: 'screen_view',
       timestamp: DateTime.now().toUtc(),

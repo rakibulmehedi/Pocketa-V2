@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:helm/core/analytics/analytics_service.dart';
 import 'package:helm/core/analytics/event_registry.dart';
+import 'package:helm/core/local_storage/shared_pref_service.dart';
 import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/core/themes/helm_spacing.dart';
 import 'package:helm/core/themes/helm_typography.dart';
@@ -34,7 +35,7 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
       if (!mounted) return;
       if (next == ExportStatus.success) {
         final notifier = ref.read(exportProvider.notifier);
-        _shareFiles(notifier.lastResult?.filePaths ?? [], l10n);
+        _shareWithWarning(notifier.lastResult?.filePaths ?? [], l10n);
         notifier.reset();
       } else if (next == ExportStatus.error) {
         final notifier = ref.read(exportProvider.notifier);
@@ -183,6 +184,43 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
           ),
         )
         .toList();
+  }
+
+  // L-9: Show a one-time privacy warning before sharing. Uses the
+  // SharedPrefServices flag 'exportWarningShown' to suppress on subsequent
+  // exports — the user acknowledged it once and that acknowledgement persists.
+  Future<void> _shareWithWarning(
+    List<String> filePaths,
+    AppLocalizations l10n,
+  ) async {
+    if (filePaths.isEmpty) return;
+
+    final alreadyShown =
+        SharedPrefServices.getEventFired('exportWarningShown');
+
+    if (!alreadyShown && mounted) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.exportWarningTitle),
+          content: Text(l10n.exportWarningBody),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(l10n.ok),
+            ),
+          ],
+        ),
+      );
+      if (confirmed == true) {
+        await SharedPrefServices.setEventFired('exportWarningShown');
+      } else {
+        // User dismissed without confirming — do not share.
+        return;
+      }
+    }
+
+    _shareFiles(filePaths, l10n);
   }
 
   void _shareFiles(List<String> filePaths, AppLocalizations l10n) {

@@ -62,7 +62,11 @@ class TransactionsNotifier
     try {
       await _repository.addTransaction(transaction);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory append — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      final updated = [transaction, ...current]
+        ..sort((a, b) => b.date.compareTo(a.date));
+      state = AsyncValue.data(updated);
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);
@@ -73,7 +77,11 @@ class TransactionsNotifier
     try {
       await _repository.updateTransaction(transaction);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory replace by id — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      final updated = current.map((t) => t.id == transaction.id ? transaction : t).toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
+      state = AsyncValue.data(updated);
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);
@@ -84,7 +92,9 @@ class TransactionsNotifier
     try {
       await _repository.deleteTransaction(id);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory removal by id — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      state = AsyncValue.data(current.where((t) => t.id != id).toList());
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);

@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         applicationId = "com.safetospends.helm"
-        minSdk = 21
+        minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName

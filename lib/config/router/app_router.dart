@@ -100,9 +100,12 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.editTransaction,
       name: 'editTransaction',
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-        final safeId = InputValidator.isValidId(id) ? id : null;
-        return AddTransactionScreen(transactionId: safeId);
+        // L-6: format-guard id path parameter — reject empty or oversized values.
+        final id = state.pathParameters['id'] ?? '';
+        if (id.isEmpty || id.length > 100 || !InputValidator.isValidId(id)) {
+          return const AddTransactionScreen();
+        }
+        return AddTransactionScreen(transactionId: id);
       },
     ),
     GoRoute(
@@ -114,8 +117,11 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.editIncome,
       name: 'editIncome',
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-        if (!InputValidator.isValidId(id)) return const AddIncomeScreen();
+        // L-6: format-guard id path parameter — reject empty or oversized values.
+        final id = state.pathParameters['id'] ?? '';
+        if (id.isEmpty || id.length > 100 || !InputValidator.isValidId(id)) {
+          return const AddIncomeScreen();
+        }
         return AddIncomeScreen(incomeId: id);
       },
     ),
