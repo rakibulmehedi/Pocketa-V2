@@ -46,9 +46,12 @@ app.*.symbols
 app.*.map.json
 
 # Android release signing
+/android/key.properties
 /android/app/key.properties
 /android/app/*.keystore
 /android/app/*.jks
+*.jks
+*.keystore
 
 # Environment / secrets
 *.env
