@@ -7,9 +7,13 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [0.5.0-beta.1] — 2026-06-21
+## [0.9.0] — 2026-06-29
 
 ### Added
+- **Biometric unlock for PIN screen**: fingerprint/face ID via `local_auth`; opt-in sheet after PIN setup; auto-trigger on PIN screen with manual fallback button
+- `BiometricDataSource`, `BiometricNotifier`, `biometricProvider`, and `unlockViaBiometrics` on `AuthNotifier` — full clean architecture stack
+- Biometric preference persisted to repository and wired into PIN flow
+- Biometric localization strings (en + bn)
 - **History tab — Paper Ledger reskin**: `AuditLogScreen` rebuilt to Paper Ledger standard with date-grouped event cards, tappable before→after detail sheet (`AuditEventDetailSheet`), and ledger integrity strip
 - **Chain re-verification**: `AuditChainService.verifyChain` recomputes SHA-256 over the full event history at read time; `ChainVerification` result surfaced in `LedgerIntegrityStrip`
 - **Paper Ledger widget system**: `HelmLedgerHero`, `HelmLedgerRow`, `HelmNextEventCard`, `LedgerState` — shared ledger primitives used across Dashboard and History tab
@@ -18,41 +22,42 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `auditIntegrityProvider` — chain integrity verified on History tab open, result shown in `LedgerIntegrityStrip`
 - Fraunces font family (Regular, Medium, SemiBold) added for Paper Ledger display typography
 - Golden baselines for History tab (light + dark)
+- Guest mode: users can skip magic-link identity verification and use the app locally; identity-specific routes (audit log, trace, delete account) are blocked for guests
+- `errorInvalidEmail` localization key in en/bn (324/324 ARB keys); magic-link screen now shows distinct error for malformed email addresses
+- Hive cross-validation for magic-link flag: spoofing SharedPrefs via ADB backup no longer bypasses the identity gate
+
+### Fixed
+- **Security (HIGH)**: H-11, H-21, H-24, H-26, H-29, H-35, H-37–H-41 resolved (Phase 1 S1 audit)
+- **Security (MEDIUM)**: M-13, M-16–M-17, M-26–M-27, M-30–M-33 resolved
+- **Security (LOW)**: L-2, L-4–L-12 resolved
+- **CRITICAL**: base64url token regex now accepts `-` and `_`; prior regex rejected all real Supabase OTP tokens, breaking production auth
+- Onboarding no longer inserts fake "Initial Balance" income entry (C-10)
+- Hardcoded English strings replaced with ARB localization keys (C-9)
+- Settings and History accessible from all 3 tab AppBars
+- Negative amounts (`formatBDT`, `formatUSD`) no longer render as `-,36,000.00`; sign stripped before grouping and restored after
+- `box.get() as bool` crash vector replaced with `== true`; tampered Hive values no longer throw `TypeError` inside `_globalRedirect`
+- `logout()` now clears `magic_link_verified` from Hive and `guest_mode` from SharedPrefs; stale identity state no longer persists across sessions
+- `onAuthenticated` / `onGuest` callbacks typed as `Future<void> Function()`; auth writes awaited before navigation, eliminating silent write failures
+- Dead `guest_mode` Hive write removed from onGuest callback; guest mode is intentionally SharedPrefs-backed
 
 ### Changed
 - **Dashboard reskin**: Signal Deck replaced by Paper Ledger widgets (`HelmLedgerHero`, `HelmNextEventCard`); ledger state drives safe/tight/atRisk/empty color logic
 - **Income list screen removed**: standalone income list and pipeline summary deleted; income managed via pipeline and add-income routes
-
-### Removed
-- Signal Deck widget family (`HelmSignalHero`, `HelmDecisionDeck`, `HelmFlowRoute`, `HelmSignalHorizon`) and associated tests
-
----
-
-## [0.4.0-beta.1] — 2026-06-20
-
-### Added
-- Guest mode: users can skip magic-link identity verification and use the app locally; identity-specific routes (audit log, trace, delete account) are blocked for guests
-- `errorInvalidEmail` localization key in en/bn (324/324 ARB keys); magic-link screen now shows a distinct error for malformed email addresses rather than reusing the rate-limit message
-- Hive cross-validation for magic-link flag: spoofing SharedPrefs via ADB backup no longer bypasses the identity gate
-
-### Fixed
-- **CRITICAL**: base64url token regex now accepts `-` and `_`; prior regex rejected all real Supabase OTP tokens containing those characters, breaking production auth
-- Negative amounts (`formatBDT`, `formatUSD`) no longer render as `-,36,000.00`; sign is stripped before grouping and restored after
-- `box.get() as bool` crash vector replaced with `== true`; tampered Hive values no longer throw `TypeError` inside `_globalRedirect`
-- `logout()` now clears `magic_link_verified` from Hive and `guest_mode` from SharedPrefs; stale identity state no longer persists across sessions
-- `onAuthenticated` / `onGuest` callbacks typed as `Future<void> Function()`; auth writes are now awaited before navigation, eliminating silent write failures
-- Dead `guest_mode` Hive write removed from onGuest callback; guest mode is intentionally SharedPrefs-backed
-
-### Changed
 - Complete UI/UX migration to HelmSpacing, HelmTypography, and HelmColors design tokens across all screens (58 hardcoded radius/spacing values replaced)
 - Currency symbols centralized behind `NumberFormatter.symbolForCode` boundary (7 files)
 - GoRouter magic-link→onboarding redirect loop fixed: early `null` return prevents gate stacking
 - `_identityRoutes` constant introduced for declarative guest route restriction
+- Navigation: `BottomNavigationBar` replacing `HelmNavBar` (3-tab, Material icons)
+- `/settings` and `/trace` re-registered as push-overlay routes
+- Build config: `applicationId com.safetospends.helm`, `minSdk 21`, `targetSdk 35`, Play Store version `1.0.0+1`
+
+### Removed
+- Signal Deck widget family (`HelmSignalHero`, `HelmDecisionDeck`, `HelmFlowRoute`, `HelmSignalHorizon`) and associated tests
 
 ### Internal
-- 19 commits since v0.3.0-beta.1
-- 365/365 tests pass; 0 errors / 0 warnings / 0 infos — dart analyze clean
-- Dual-model adversarial review (Claude + Codex) completed before merge
+- 238 commits since v0.8.0
+- Phase 2 QA gate: GO verdict — all critical flow widget tests passing
+- dart analyze: 0 errors / 0 warnings / 0 infos
 
 ---
 
