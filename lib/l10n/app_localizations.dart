@@ -2203,6 +2203,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// Biometric opt-in sheet: title
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Biometrics'**
+  String get biometricEnableTitle;
+
+  /// Biometric opt-in sheet: subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Use Face ID or fingerprint to unlock Helm'**
+  String get biometricEnableSubtitle;
+
+  /// Biometric opt-in sheet: confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get biometricEnableButton;
+
+  /// Biometric opt-in sheet: skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get biometricSkipButton;
+
+  /// OS biometric dialog reason string
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Helm'**
+  String get biometricAuthReason;
+
+  /// PIN entry: tap to dismiss biometric and enter PIN
+  ///
+  /// In en, this message translates to:
+  /// **'Use PIN instead'**
+  String get biometricUsePinFallback;
 }
 
 class _AppLocalizationsDelegate

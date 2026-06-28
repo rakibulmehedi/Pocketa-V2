@@ -305,11 +305,11 @@ class AuthNotifier extends Notifier<AuthState> {
 
   /// Authenticates via biometrics. On success, transitions to authenticated
   /// and resets the failed-attempts counter — same trust level as PIN.
-  Future<bool> unlockViaBiometrics() async {
+  Future<bool> unlockViaBiometrics({String reason = 'Unlock Helm'}) async {
     if (state.isLockedOut) return false;
 
     final datasource = ref.read(biometricDataSourceProvider);
-    final success = await datasource.authenticate('Unlock Helm');
+    final success = await datasource.authenticate(reason);
     if (!_mounted) return false;
 
     if (success) {

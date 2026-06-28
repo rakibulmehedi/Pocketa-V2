@@ -83,8 +83,9 @@ class _PinSetupScreenState extends ConsumerState<PinSetupScreen> {
     ref.read(analyticsProvider).trackEvent(TransactionalEvents.pinSetupCompleted);
     if (!mounted) return;
 
-    final biometricState = ref.read(biometricProvider).valueOrNull;
-    if (biometricState != null && biometricState.isAvailable) {
+    final biometricState = await ref.read(biometricProvider.future);
+    if (!mounted) return;
+    if (biometricState.isAvailable) {
       await _showBiometricSheet();
     }
     if (!mounted) return;

@@ -86,7 +86,8 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
 
   Future<void> _triggerBiometric() async {
     unawaited(HapticFeedback.lightImpact());
-    final success = await ref.read(authProvider.notifier).unlockViaBiometrics();
+    final reason = context.l10n.biometricAuthReason;
+    final success = await ref.read(authProvider.notifier).unlockViaBiometrics(reason: reason);
     if (!mounted) return;
     if (success) {
       unawaited(HapticFeedback.mediumImpact());
@@ -174,6 +175,12 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
         biometricAsync.valueOrNull?.let((s) => s.isAvailable && s.isEnabled && !lockedOut) ??
             false;
 
+    ref.listen<AsyncValue<BiometricState>>(biometricProvider, (prev, next) {
+      if ((prev == null || prev.isLoading) && next.hasValue) {
+        _maybeAutoTriggerBiometric();
+      }
+    });
+
     final screenHeight = MediaQuery.of(context).size.height;
     final verticalSpacing = screenHeight < 680 ? 16.0 : 32.0;
 
@@ -202,6 +209,16 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
                 onClear: _onClear,
                 onBiometric: showBiometric ? _triggerBiometric : null,
                 colors: colors,
+              ),
+            if (showBiometric)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  context.l10n.biometricUsePinFallback,
+                  style: context.textStyles.bodyMd.copyWith(
+                    color: colors.inkTertiary,
+                  ),
+                ),
               ),
             SizedBox(height: verticalSpacing),
           ],
