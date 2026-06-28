@@ -6,8 +6,8 @@
 //   1. WelcomeScreen — CTA button is present and tappable
 //   2. OnboardingScreen — renders and shows QualifyingQuestionPage (step 0)
 //   3. Step indicator advances when tapping through qualifying page
-//   4. FirstPipelinePage "Skip for now" button is present and tappable
-//   5. Completing onboarding (via skip) marks state as done
+//   4. FirstPipelinePage renders with primary action only (skip removed)
+//   5. Completing onboarding marks state as done
 //
 // Provider strategy: all Hive-backed and async providers are overridden with
 // lightweight in-memory stubs so no real Hive box is required.
@@ -27,7 +27,6 @@ import 'package:helm/features/income/presentation/providers/income_providers.dar
 import 'package:helm/features/onboarding/presentation/providers/onboarding_state_provider.dart';
 import 'package:helm/features/onboarding/presentation/views/onboarding_screen.dart';
 import 'package:helm/features/onboarding/presentation/views/welcome_screen.dart';
-import 'package:helm/features/onboarding/presentation/views/pages/first_pipeline_page.dart';
 import 'package:helm/features/onboarding/presentation/views/pages/qualifying_question_page.dart';
 import 'package:helm/features/onboarding/presentation/widgets/onboarding_progress_line.dart';
 import 'package:helm/features/safe_to_spend/domain/entities/fixed_cost_entry.dart';
@@ -296,51 +295,6 @@ void main() {
   // FirstPipelinePage is mounted directly to avoid traversing all 6 onboarding
   // steps in a test viewport (which triggers overflow errors on intermediate
   // pages that are too tall for the default 800×600 test surface).
-
-  group('FirstPipelinePage — skip button', () {
-    Widget buildPipelinePage({VoidCallback? onSkip}) {
-      return ProviderScope(
-        overrides: _stubOverrides(),
-        child: MaterialApp(
-          theme: AppTheme.light,
-          locale: const Locale('en'),
-          supportedLocales: const [Locale('en'), Locale('bn')],
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          home: Scaffold(
-            body: FirstPipelinePage(
-              onAddEntry: (_) async {},
-              onSkip: onSkip ?? () {},
-            ),
-          ),
-        ),
-      );
-    }
-
-    testWidgets('"Skip for now" button is present', (tester) async {
-      await tester.pumpWidget(buildPipelinePage());
-      await tester.pumpAndSettle();
-
-      expect(find.text('Skip for now'), findsOneWidget);
-    });
-
-    testWidgets('"Skip for now" is tappable and calls onSkip', (tester) async {
-      var skipped = false;
-      await tester.pumpWidget(
-        buildPipelinePage(onSkip: () => skipped = true),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Skip for now'));
-      await tester.pumpAndSettle();
-
-      expect(skipped, isTrue);
-    });
-  });
 
   // ── 5. Qualifying "No" path — disqualification screen ───────────────────────
 

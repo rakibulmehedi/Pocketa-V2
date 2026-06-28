@@ -38,12 +38,10 @@ class PipelineDraftEntry {
 
 class FirstPipelinePage extends StatefulWidget {
   final Future<void> Function(PipelineDraftEntry entry) onAddEntry;
-  final VoidCallback onSkip;
 
   const FirstPipelinePage({
     super.key,
     required this.onAddEntry,
-    required this.onSkip,
   });
 
   @override
@@ -349,21 +347,6 @@ class _FirstPipelinePageState extends State<FirstPipelinePage>
                       onPressed: _isLoading ? null : _submit,
                       isEnabled: !_isLoading,
                       isLoading: _isLoading,
-                    ),
-                    const SizedBox(height: HelmSpacing.s2),
-                    Semantics(
-                      label: l10n.pipelineSkipSemantics,
-                      button: true,
-                      child: TextButton(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          widget.onSkip();
-                        },
-                        child: Text(
-                          l10n.skipForNow,
-                          style: typo.bodyMd.copyWith(color: colors.inkTertiary),
-                        ),
-                      ),
                     ),
                     const SizedBox(height: HelmSpacing.s4),
                   ],
