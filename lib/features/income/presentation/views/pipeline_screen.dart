@@ -14,11 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:helm/config/router/route_names.dart';
+import 'package:helm/core/local_storage/shared_pref_service.dart';
 import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/core/themes/helm_spacing.dart';
 import 'package:helm/core/themes/helm_typography.dart';
+import 'package:helm/core/widgets/helm_icon.dart';
 import 'package:helm/features/income/domain/entities/income_entry_entity.dart';
 import 'package:helm/features/income/presentation/providers/income_providers.dart';
 import 'package:helm/features/income/presentation/widgets/pipeline_entry_card.dart';
@@ -86,6 +89,21 @@ class PipelineScreen extends ConsumerWidget {
           style: typo.headingSm.copyWith(color: colors.inkPrimary),
         ),
         centerTitle: false,
+        actions: [
+          if (!SharedPrefServices.getGuestMode())
+            IconButton(
+              key: const ValueKey('pipeline-audit-link'),
+              tooltip: l10n.viewAuditTrail,
+              icon: const HelmIcon(LucideIcons.history, size: HelmIconSize.lg),
+              onPressed: () => context.push(RouteNames.trace),
+            ),
+          IconButton(
+            key: const ValueKey('pipeline-settings-gear'),
+            tooltip: l10n.settings,
+            icon: const HelmIcon(LucideIcons.settings, size: HelmIconSize.lg),
+            onPressed: () => context.push(RouteNames.settings),
+          ),
+        ],
       ),
       floatingActionButton: _PipelineFab(entryCount: entries.length),
       body: hasAny

@@ -65,7 +65,7 @@ class HelmSourceCard extends StatelessWidget {
 
     final borderRadius = BorderRadius.circular(HelmSpacing.cardRadius);
 
-    Widget cardContent = Padding(
+    final Widget cardContent = Padding(
       padding: const EdgeInsets.all(HelmSpacing.s3),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,7 +145,7 @@ class HelmSourceCard extends StatelessWidget {
       ),
     );
 
-    Widget decorated = DecoratedBox(
+    final Widget decorated = DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: borderRadius,

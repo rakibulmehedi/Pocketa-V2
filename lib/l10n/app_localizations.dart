@@ -2041,6 +2041,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{hours}h ago'**
   String auditRelativeHoursAgo(int hours);
+
+  /// Spend tab screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Spend'**
+  String get spendTitle;
+
+  /// Spend tab summary strip label
+  ///
+  /// In en, this message translates to:
+  /// **'Spent this month · reduces Safe-to-Spend'**
+  String get spendSummaryLabel;
+
+  /// Spend tab empty-state title
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing spent yet'**
+  String get spendEmptyTitle;
+
+  /// Spend tab empty-state teaching body
+  ///
+  /// In en, this message translates to:
+  /// **'Record money you have already paid out — each payment updates your Safe-to-Spend.'**
+  String get spendEmptyBody;
+
+  /// Spend tab add-payment FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'Add a payment'**
+  String get spendFabLabel;
+
+  /// Bottom navigation tab label: home / dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get tabHome;
+
+  /// Bottom navigation tab label: income pipeline
+  ///
+  /// In en, this message translates to:
+  /// **'Pipeline'**
+  String get tabPipeline;
+
+  /// Bottom navigation tab label: spend / cash-out
+  ///
+  /// In en, this message translates to:
+  /// **'Spend'**
+  String get tabSpend;
+
+  /// Bottom navigation tab tooltip: home
+  ///
+  /// In en, this message translates to:
+  /// **'Safe-to-Spend'**
+  String get tabHomeTip;
+
+  /// Bottom navigation tab tooltip: pipeline
+  ///
+  /// In en, this message translates to:
+  /// **'Income pipeline'**
+  String get tabPipelineTip;
+
+  /// Bottom navigation tab tooltip: spend
+  ///
+  /// In en, this message translates to:
+  /// **'Money spent'**
+  String get tabSpendTip;
+
+  /// Tooltip on history icon buttons in app bar
+  ///
+  /// In en, this message translates to:
+  /// **'View audit trail'**
+  String get viewAuditTrail;
+
+  /// Label on the trace TextButton inside HelmNextEventCard
+  ///
+  /// In en, this message translates to:
+  /// **'View trace'**
+  String get viewTrace;
+
+  /// Heading on the non-dismissible compromised-device blocking screen
+  ///
+  /// In en, this message translates to:
+  /// **'This device appears to be compromised'**
+  String get compromisedDeviceTitle;
+
+  /// Body copy on the compromised-device blocking screen
+  ///
+  /// In en, this message translates to:
+  /// **'Helm cannot run on rooted or jailbroken devices because your local financial data could be exposed. Please use an unmodified device.'**
+  String get compromisedDeviceBody;
+
+  /// Button label on the compromised-device blocking screen
+  ///
+  /// In en, this message translates to:
+  /// **'Close Helm'**
+  String get closeHelm;
+
+  /// Severity word used in HelmCautionCard semantics label when isCritical=true
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get cautionCritical;
+
+  /// Severity word used in HelmCautionCard semantics label when isCritical=false
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get cautionWarning;
+
+  /// H-24: security warning shown above the CSV export button
+  ///
+  /// In en, this message translates to:
+  /// **'CSV export contains unencrypted financial data. Only share with trusted recipients.'**
+  String get csvExportWarning;
+
+  /// H-39: confirmation dialog title before deleting an item
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm deletion'**
+  String get deleteConfirmTitle;
+
+  /// H-39: confirm delete action label in confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// M-33: rate limit error shown when too many auth attempts occur
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait 1 minute.'**
+  String get rateLimitError;
+
+  /// M-33: account lockout error with time remaining
+  ///
+  /// In en, this message translates to:
+  /// **'Account temporarily locked. Try again in {minutes} minutes.'**
+  String accountLockedError(int minutes);
+
+  /// M-33: user-friendly export failure message
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed. Check storage permissions.'**
+  String get exportError;
+
+  /// L-9: one-time pre-share warning dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing financial data'**
+  String get exportWarningTitle;
+
+  /// L-9: one-time pre-share warning dialog body
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to share financial data. Only share with trusted recipients.'**
+  String get exportWarningBody;
+
+  /// Generic acknowledgement button label
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Biometric opt-in sheet: title
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Biometrics'**
+  String get biometricEnableTitle;
+
+  /// Biometric opt-in sheet: subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Use Face ID or fingerprint to unlock Helm'**
+  String get biometricEnableSubtitle;
+
+  /// Biometric opt-in sheet: confirm button
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get biometricEnableButton;
+
+  /// Biometric opt-in sheet: skip button
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get biometricSkipButton;
+
+  /// OS biometric dialog reason string
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Helm'**
+  String get biometricAuthReason;
+
+  /// PIN entry: tap to dismiss biometric and enter PIN
+  ///
+  /// In en, this message translates to:
+  /// **'Use PIN instead'**
+  String get biometricUsePinFallback;
 }
 
 class _AppLocalizationsDelegate

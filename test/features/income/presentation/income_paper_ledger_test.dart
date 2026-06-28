@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:helm/core/local_storage/shared_pref_service.dart';
 import 'package:helm/core/themes/app_theme.dart';
 import 'package:helm/features/income/domain/entities/income_entry_entity.dart';
 import 'package:helm/features/income/domain/repositories/income_repository.dart';
@@ -62,6 +64,11 @@ Widget _app(ThemeData theme) => ProviderScope(
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    await SharedPrefServices.init();
+  });
+
   testWidgets('PipelineScreen renders in light mode without error',
       (tester) async {
     await tester.pumpWidget(_app(AppTheme.light));

@@ -3,9 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:helm/core/themes/app_theme.dart';
 import 'package:helm/core/widgets/ledger/helm_next_event_card.dart';
+import 'package:helm/l10n/app_localizations.dart';
 
-Widget _wrap(Widget child) =>
-    MaterialApp(theme: AppTheme.light, home: Scaffold(body: child));
+Widget _wrap(Widget child) => MaterialApp(
+      theme: AppTheme.light,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: Scaffold(body: child),
+    );
 
 void main() {
   setUp(() {

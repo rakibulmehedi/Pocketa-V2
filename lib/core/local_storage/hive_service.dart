@@ -46,7 +46,7 @@ class HiveService {
   static HiveCipher? _cipher;
 
   static const _backupExclusionChannel = MethodChannel(
-    'co.helm.finance/backup',
+    'com.safetospends.helm/backup',
   );
 
   /// Initialises Hive and registers all adapters + opens all boxes.

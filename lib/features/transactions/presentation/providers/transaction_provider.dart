@@ -5,6 +5,7 @@
 // Phase 7f — Provider now exposes TransactionEntity (domain type).
 // TransactionModel is no longer imported in the presentation layer.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/datasources/transaction_local_data_source.dart';
@@ -37,6 +38,12 @@ class TransactionsNotifier
     loadTransactions();
   }
 
+  /// Test-only seed constructor — sets state directly, no repository load.
+  @visibleForTesting
+  TransactionsNotifier.test(List<TransactionEntity> seed)
+      : _repository = _UnusedRepository(),
+        super(AsyncValue.data(seed));
+
   Future<void> loadTransactions() async {
     state = const AsyncValue.loading();
     try {
@@ -55,7 +62,11 @@ class TransactionsNotifier
     try {
       await _repository.addTransaction(transaction);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory append — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      final updated = [transaction, ...current]
+        ..sort((a, b) => b.date.compareTo(a.date));
+      state = AsyncValue.data(updated);
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);
@@ -66,7 +77,11 @@ class TransactionsNotifier
     try {
       await _repository.updateTransaction(transaction);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory replace by id — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      final updated = current.map((t) => t.id == transaction.id ? transaction : t).toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
+      state = AsyncValue.data(updated);
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);
@@ -77,7 +92,9 @@ class TransactionsNotifier
     try {
       await _repository.deleteTransaction(id);
       if (!mounted) return;
-      await loadTransactions();
+      // In-memory removal by id — avoids full Hive re-read on every mutation (L-4).
+      final current = state.valueOrNull ?? [];
+      state = AsyncValue.data(current.where((t) => t.id != id).toList());
     } on Exception catch (e, st) {
       if (!mounted) return;
       state = AsyncValue.error(e, st);
@@ -94,4 +111,27 @@ class TransactionsNotifier
       state = AsyncValue.error(e, st);
     }
   }
+}
+
+/// Test-only no-op repository stub. All methods throw [UnimplementedError].
+class _UnusedRepository implements TransactionRepository {
+  @override
+  Future<void> addTransaction(TransactionEntity transaction) =>
+      throw UnimplementedError('test stub repository');
+
+  @override
+  Future<void> updateTransaction(TransactionEntity transaction) =>
+      throw UnimplementedError('test stub repository');
+
+  @override
+  Future<List<TransactionEntity>> getTransactions() =>
+      throw UnimplementedError('test stub repository');
+
+  @override
+  Future<void> deleteTransaction(String id) =>
+      throw UnimplementedError('test stub repository');
+
+  @override
+  Future<void> clearTransactions() =>
+      throw UnimplementedError('test stub repository');
 }

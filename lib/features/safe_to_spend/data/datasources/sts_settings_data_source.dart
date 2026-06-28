@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,11 +134,23 @@ class StsSettingsDataSourceImpl implements StsSettingsDataSource {
 
     final oldVal = prefs.getDouble(_legacyBufferKey);
     if (oldVal != null) {
-      // H-11: Preserve the user's legacy value when it is already a valid
-      // percentage. If it looks like an absolute BDT amount (outside 0–100),
-      // keep it in a backup key for support recovery and fall back to the
-      // documented default rather than silently discarding the user's value.
-      final migrated = oldVal >= 0.0 && oldVal <= 100.0 ? oldVal : 15.0;
+      // H-11: Never silently discard user data.
+      // If the stored value is within 0–100, it's already a percentage.
+      // If it exceeds 100, it was stored as an absolute BDT amount — convert
+      // it to an estimated percentage clamped to the valid range (5–30).
+      final double migrated;
+      if (oldVal >= 0.0 && oldVal <= 100.0) {
+        migrated = oldVal;
+      } else {
+        // Absolute BDT value: estimate as a percentage of a baseline balance.
+        migrated = (oldVal / 50000.0 * 100).clamp(5.0, 30.0);
+        if (kDebugMode) {
+          debugPrint(
+            '[StsSettings] buffer migrated from absolute BDT to %: '
+            '${oldVal.toStringAsFixed(0)} BDT → ${migrated.toStringAsFixed(1)}%',
+          );
+        }
+      }
       await prefs.setDouble(_bufferPercentKey, migrated);
       await prefs.setDouble('${_legacyBufferKey}_backup_bdt', oldVal);
       await prefs.remove(_legacyBufferKey);

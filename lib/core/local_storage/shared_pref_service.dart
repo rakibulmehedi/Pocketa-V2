@@ -206,4 +206,15 @@ class SharedPrefServices {
   static Future<void> setGuestMode(bool isGuest) async {
     await _instance.setBool(_guestModeKey, isGuest);
   }
+
+  // ── Biometric preference ─────────────────────────────────────────────────
+  static const String _biometricEnabledKey = 'biometric_enabled';
+
+  static bool getBiometricEnabled() {
+    return _instance.getBool(_biometricEnabledKey) ?? false;
+  }
+
+  static Future<void> setBiometricEnabled(bool enabled) async {
+    await _instance.setBool(_biometricEnabledKey, enabled);
+  }
 }

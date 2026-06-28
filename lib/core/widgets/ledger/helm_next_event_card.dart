@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../themes/helm_colors.dart';
 import '../../themes/helm_spacing.dart';
 import '../../themes/helm_typography.dart';
+import '../../../l10n/app_localization.dart';
 
 class HelmNextEventCard extends StatelessWidget {
   const HelmNextEventCard({
@@ -66,7 +67,9 @@ class HelmNextEventCard extends StatelessWidget {
           ),
           if (onTrace != null) ...[
             const SizedBox(height: HelmSpacing.s1),
-            TextButton(onPressed: onTrace, child: const Text('View trace')),
+            TextButton(
+                onPressed: onTrace,
+                child: Text(context.l10n.viewTrace)),
           ],
         ],
       ),

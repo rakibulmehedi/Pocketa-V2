@@ -35,7 +35,7 @@ class HelmLedgerCard extends StatelessWidget {
     final resolvedPadding = padding ?? const EdgeInsets.all(HelmSpacing.s4);
     final borderRadius = BorderRadius.circular(HelmSpacing.cardRadius);
 
-    Widget cardContent = Padding(
+    final Widget cardContent = Padding(
       padding: resolvedPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class HelmLedgerCard extends StatelessWidget {
       ),
     );
 
-    Widget decorated = DecoratedBox(
+    final Widget decorated = DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,
         borderRadius: borderRadius,

@@ -10,7 +10,7 @@
 ///
 /// BDT uses the Indian/Bangladeshi number system:
 ///   - Groups of 3 for the rightmost digits, then groups of 2.
-///   - Prefix: "tk " (lowercase with trailing space).
+///   - Prefix: "৳ " (U+09F3 Bengali Rupee Sign with trailing space).
 ///
 /// USD uses standard Western grouping with "$ " prefix.
 final class NumberFormatter {
@@ -53,33 +53,33 @@ final class NumberFormatter {
   /// Formats [amount] as BDT with lakh/crore grouping.
   ///
   /// Examples:
-  ///   formatBDT(36000.0)      → "tk 36,000.00"
-  ///   formatBDT(100000.0)     → "tk 1,00,000.00"
-  ///   formatBDT(10000000.0)   → "tk 1,00,00,000.00"
-  ///   formatBDT(1500000.0)    → "tk 15,00,000.00"
+  ///   formatBDT(36000.0)      → "৳ 36,000.00"
+  ///   formatBDT(100000.0)     → "৳ 1,00,000.00"
+  ///   formatBDT(10000000.0)   → "৳ 1,00,00,000.00"
+  ///   formatBDT(1500000.0)    → "৳ 15,00,000.00"
   static String formatBDT(double amount) {
     final String formatted = _formatBDTInternal(amount, decimals: 2);
-    return 'tk $formatted';
+    return '৳ $formatted';
   }
 
   /// Compact BDT for tight-space contexts (Trust Strip, sub-labels).
   ///
   /// Examples:
-  ///   formatBDTCompact(100000.0)   → "tk 1.00L"
-  ///   formatBDTCompact(10000000.0) → "tk 1.00Cr"
-  ///   formatBDTCompact(36000.0)    → "tk 36,000"
+  ///   formatBDTCompact(100000.0)   → "৳ 1.00L"
+  ///   formatBDTCompact(10000000.0) → "৳ 1.00Cr"
+  ///   formatBDTCompact(36000.0)    → "৳ 36,000"
   static String formatBDTCompact(double amount) {
     if (amount >= 10000000) {
       // Crore threshold: 1,00,00,000
       final double crore = amount / 10000000;
-      return 'tk ${crore.toStringAsFixed(2)}Cr';
+      return '৳ ${crore.toStringAsFixed(2)}Cr';
     } else if (amount >= 100000) {
       // Lakh threshold: 1,00,000
       final double lakh = amount / 100000;
-      return 'tk ${lakh.toStringAsFixed(2)}L';
+      return '৳ ${lakh.toStringAsFixed(2)}L';
     } else {
       // Below 1 lakh — no decimal suffix, just grouping (no decimals for compact)
-      return 'tk ${_formatBDTInternal(amount, decimals: 0)}';
+      return '৳ ${_formatBDTInternal(amount, decimals: 0)}';
     }
   }
 
@@ -103,9 +103,9 @@ final class NumberFormatter {
 
   /// Formats an FX rate for display.
   ///
-  /// Example: formatFXRate(119.66) → "tk 119.66"
+  /// Example: formatFXRate(119.66) → "৳ 119.66"
   static String formatFXRate(double rate) {
-    return 'tk ${rate.toStringAsFixed(2)}';
+    return '৳ ${rate.toStringAsFixed(2)}';
   }
 
   // ---------------------------------------------------------------------------
@@ -114,14 +114,16 @@ final class NumberFormatter {
 
   /// Parses a formatted BDT string back to a [double].
   ///
-  /// Strips "tk ", all commas, and "L"/"Cr" suffixes before parsing.
-  /// Returns null if parsing fails.
+  /// Strips "৳ " (or legacy "tk "), all commas, and "L"/"Cr" suffixes before
+  /// parsing. Returns null if parsing fails.
   static double? parseBDT(String formatted) {
     try {
       String s = formatted.trim();
 
-      // Remove prefix
-      if (s.startsWith('tk ')) {
+      // Remove prefix — support both current (৳ ) and legacy (tk ) formats.
+      if (s.startsWith('৳ ')) {
+        s = s.substring(2);
+      } else if (s.startsWith('tk ')) {
         s = s.substring(3);
       }
 

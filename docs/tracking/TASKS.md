@@ -419,6 +419,12 @@ See `docs/planning/TDD_DISPATCH_PHASE_6_V2_FEATURES.md`
 
 ## Backlog (Post-Beta / Deferred)
 
+### Nav Reskin — Follow-ups (filed 2026-06-21)
+- [ ] Reskin `AddTransactionScreen` — replace legacy "cash out" language (UX-P5), align to Spend framing ("Add a payment"), reconsider `categoryId` exposure per Final Doctrine.
+- [ ] App-wide Lucide migration — migrate remaining ~24 Material-icon files to `HelmIcon`/`LucideIcons`.
+- [ ] Route de-duplication — collapse `/settings` vs `/sts-settings`.
+- [ ] Behavioral widget tests for Dashboard gear + Pipeline audit link once Dashboard initState (AR-P1) and income provider gain test seams.
+
 - [ ] Virtual Wallets (V1 — after beta clears)
 - [ ] Tax reserve (V2)
 - [ ] Invoice-Lite (V2)

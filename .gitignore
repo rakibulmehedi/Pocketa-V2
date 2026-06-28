@@ -44,11 +44,15 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+build/debug-info/
 
 # Android release signing
+/android/key.properties
 /android/app/key.properties
 /android/app/*.keystore
 /android/app/*.jks
+*.jks
+*.keystore
 
 # Environment / secrets
 *.env
@@ -72,3 +76,4 @@ app.*.map.json
 .github-audit/
 .superpowers/
 .worktrees/
+test/golden/failures/

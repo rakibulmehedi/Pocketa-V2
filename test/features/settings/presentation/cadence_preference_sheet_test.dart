@@ -57,8 +57,8 @@ void main() {
       expect(find.text('Weekly'), findsOneWidget);
       expect(find.text('Silent'), findsOneWidget);
 
-      // Default is Daily, so check-in time is visible
-      expect(find.textContaining('9:00 AM'), findsOneWidget);
+      // L-11: Default is Weekly, so check-in time is NOT visible until user selects Daily.
+      expect(find.textContaining('9:00 AM'), findsNothing);
 
       // Verify channel switches are present and true by default
       final pushSwitch = tester.widget<Switch>(find.byType(Switch).at(0));
@@ -80,17 +80,20 @@ void main() {
 
       await tester.pumpWidget(buildTestableWidget());
 
-      // Daily is selected by default, check-in time is shown
-      expect(find.textContaining('9:00 AM'), findsOneWidget);
-
-      // Switch to Weekly
-      await tester.tap(find.text('Weekly'));
-      await tester.pumpAndSettle();
-
-      // Check-in time should be hidden
+      // L-11: Weekly is selected by default, check-in time is NOT shown.
       expect(find.textContaining('9:00 AM'), findsNothing);
 
-      // Switch to Silent
+      // Switch to Daily — check-in time becomes visible.
+      await tester.tap(find.text('Daily'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('9:00 AM'), findsOneWidget);
+
+      // Switch to Weekly — check-in time is hidden again.
+      await tester.tap(find.text('Weekly'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('9:00 AM'), findsNothing);
+
+      // Switch to Silent — check-in time remains hidden.
       await tester.tap(find.text('Silent'));
       await tester.pumpAndSettle();
 
@@ -131,6 +134,10 @@ void main() {
       });
 
       await tester.pumpWidget(buildTestableWidget());
+
+      // L-11: Default is Weekly — must switch to Daily first to reveal the time picker.
+      await tester.tap(find.text('Daily'));
+      await tester.pumpAndSettle();
 
       // Tap the time selector to open time picker
       await tester.tap(find.byIcon(Icons.access_time_rounded));

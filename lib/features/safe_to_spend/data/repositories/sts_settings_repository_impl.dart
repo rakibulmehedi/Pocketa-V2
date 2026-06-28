@@ -49,6 +49,9 @@ class StsSettingsRepositoryImpl implements StsSettingsRepository {
 
   @override
   Future<void> saveSettings(StsSettings settings) async {
+    // H-26: atomic write via single JSON blob — no partial-write risk.
+    // StsSettingsDataSourceImpl encodes the full settings object into one
+    // SharedPreferences key (_settingsKey) in a single prefs.setString call.
     await _dataSource.saveSettings(settings);
   }
 }

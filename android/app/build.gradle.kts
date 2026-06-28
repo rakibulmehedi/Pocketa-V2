@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "co.helm.finance"
+    namespace = "com.safetospends.helm"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -30,9 +30,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "co.helm.finance"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        applicationId = "com.safetospends.helm"
+        minSdk = 21 // pinned — flutter.minSdkVersion resolves to 24 via plugin merge
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 

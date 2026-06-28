@@ -79,7 +79,7 @@ class HelmAuditCard extends StatelessWidget {
     // Empty state
     if (rows.isEmpty) {
       return Semantics(
-        label: 'No calculation data available',
+        label: 'No calculation data',
         child: SizedBox(
           height: 80,
           child: Column(

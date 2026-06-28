@@ -5,7 +5,7 @@ enum SignatureVerificationResult { authentic, tampered }
 
 /// Verifies the APK signing certificate SHA-256 hash via MethodChannel.
 class SignatureVerifier {
-  static const _channel = MethodChannel('co.helm.finance/signature');
+  static const _channel = MethodChannel('com.safetospends.helm/signature');
 
   /// Calls the native side to retrieve the APK signing certificate hash.
   Future<String?> fetchSignatureHash() async {

@@ -63,6 +63,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   int _currentStep = 0;
   OnboardingDraft _draft = const OnboardingDraft();
 
+  @override
+  void initState() {
+    super.initState();
+    // H-21: If onboarding was already completed, skip straight to home.
+    // Guards against re-running onboarding on back-navigation after completion.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (SharedPrefServices.getOnboardingCompleted()) {
+        context.go(RouteNames.home);
+      }
+    });
+  }
+
   void _goToStep(int step) {
     setState(() => _currentStep = step);
     _pageController.animateToPage(
@@ -115,26 +128,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     // Buffer: store as percentage in StsSettings (D1.11).
     final stsNotifier = ref.read(stsSettingsProvider.notifier);
     await stsNotifier.updateBufferPercent(_draft.bufferPercent.toDouble());
-
-    // Auto-create initial balance as a received income entry so it appears
-    // in the Income pipeline dashboard and Safe-to-Spend calculation.
-    if (_draft.liquidBalanceBdt > 0) {
-      final now = DateTime.now();
-      final initialBalanceEntry = IncomeEntryEntity(
-        id: IdGenerator.uniqueId(),
-        clientName: 'Initial Balance',
-        projectName: 'Starting cash from onboarding',
-        amount: _draft.liquidBalanceBdt,
-        currency: 'BDT',
-        status: IncomeStatus.received,
-        expectedDate: now,
-        receivedDate: now,
-        createdAt: now,
-        updatedAt: now,
-        notes: 'Liquid balance set during onboarding',
-      );
-      await ref.read(incomeNotifierProvider.notifier).addIncome(initialBalanceEntry);
-    }
 
     await SharedPrefServices.setOnboardingCompleted(true);
     ref.read(analyticsProvider).trackEvent(BoundaryEvents.onboardingCompleted);

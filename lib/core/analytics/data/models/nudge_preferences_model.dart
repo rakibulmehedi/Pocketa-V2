@@ -40,7 +40,8 @@ class NudgePreferencesModel extends HiveObject {
   NudgePreferencesEntity toEntity() => NudgePreferencesEntity(
         cadence: Cadence.values.firstWhere(
           (e) => e.name == cadenceName,
-          orElse: () => Cadence.daily,
+          // L-11: fall back to weekly (opt-in default) when stored value is unrecognised.
+          orElse: () => Cadence.weekly,
         ),
         checkInTime: TimeOfDay(hour: checkInHour, minute: checkInMinute),
         pushEnabled: pushEnabled,

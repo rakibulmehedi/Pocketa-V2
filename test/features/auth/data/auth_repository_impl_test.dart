@@ -5,8 +5,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive_ce.dart';
 import 'package:helm/core/constants/app_box_names.dart';
 import 'package:helm/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:helm/features/auth/data/datasources/biometric_datasource.dart';
 import 'package:helm/features/auth/data/models/session_model.dart';
 import 'package:helm/features/auth/data/repositories/auth_repository_impl.dart';
+
+// Unit-test stub: no platform channel, always returns false.
+class _FakeBiometricDataSource extends BiometricDataSource {
+  @override
+  Future<bool> isAvailable() async => false;
+
+  @override
+  Future<bool> authenticate(String reason) async => false;
+}
 
 void main() {
   group('AuthRepositoryImpl — sendMagicLink', () {
@@ -85,9 +95,13 @@ void main() {
       expect(stored, isNull);
     });
 
-    test('biometric is unavailable by default (pending local_auth approval)', () async {
-      expect(await repo.isBiometricAvailable(), isFalse);
-      expect(await repo.authenticateWithBiometrics(), isFalse);
+    test('biometric delegates to datasource and returns false when unavailable', () async {
+      final stubRepo = AuthRepositoryImpl(
+        remoteDataSource: ds,
+        biometricDataSource: _FakeBiometricDataSource(),
+      );
+      expect(await stubRepo.isBiometricAvailable(), isFalse);
+      expect(await stubRepo.authenticateWithBiometrics(), isFalse);
     });
   });
 }

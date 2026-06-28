@@ -11,6 +11,7 @@
 //   - Cancel is always available
 //   - After deletion: navigates to /welcome (full reset)
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,54 +46,82 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
     if (_deleting) return;
     setState(() => _deleting = true);
 
-    // Clear least-sensitive boxes first; auth_box is last so a crash mid-wipe
-    // leaves the identity/PIN gate intact where possible.
-    final boxNames = [
-      // Tier 1 — non-sensitive operational data (safe to lose mid-wipe)
-      AppBoxNames.transactions,
-      AppBoxNames.incomeBox,
-      AppBoxNames.fixedCostsBox,
-      AppBoxNames.categories,
-      AppBoxNames.analyticsEventsBox,
-      AppBoxNames.nudgePreferencesBox,
-      AppBoxNames.nudgeLogBox,
-      AppBoxNames.sessionBox,
-      // Tier 2 — audit integrity (should survive as long as possible)
-      AppBoxNames.auditEventsBox,
-      AppBoxNames.auditChainBox,
-      // Tier 3 — identity/PIN gate (last, so crash mid-wipe keeps gate intact)
-      AppBoxNames.authBox,
-    ];
+    try {
+      // Clear least-sensitive boxes first; auth_box is last so a crash mid-wipe
+      // leaves the identity/PIN gate intact where possible.
+      final boxNames = [
+        // Tier 1 — non-sensitive operational data (safe to lose mid-wipe)
+        AppBoxNames.transactions,
+        AppBoxNames.incomeBox,
+        AppBoxNames.fixedCostsBox,
+        AppBoxNames.categories,
+        AppBoxNames.analyticsEventsBox,
+        AppBoxNames.nudgePreferencesBox,
+        AppBoxNames.nudgeLogBox,
+        AppBoxNames.sessionBox,
+        // Tier 2 — audit integrity (should survive as long as possible)
+        AppBoxNames.auditEventsBox,
+        AppBoxNames.auditChainBox,
+        // Tier 3 — identity/PIN gate (last, so crash mid-wipe keeps gate intact)
+        AppBoxNames.authBox,
+      ];
 
-    for (final name in boxNames) {
-      try {
-        if (Hive.isBoxOpen(name)) {
-          final box = Hive.box<dynamic>(name);
-          await box.clear();
-          await box.close();
-          await Hive.deleteBoxFromDisk(name);
+      for (final name in boxNames) {
+        try {
+          if (Hive.isBoxOpen(name)) {
+            final box = Hive.box<dynamic>(name);
+            await box.clear();
+            await box.close();
+            await Hive.deleteBoxFromDisk(name);
+          }
+        } on Exception catch (e, st) {
+          if (kDebugMode) {
+            debugPrint('[DELETE_ACCOUNT] failed to clear box $name: $e\n$st');
+          }
         }
+      }
+
+      try {
+        await SecureKeyManager().deleteHiveKey();
       } on Exception catch (e, st) {
-        debugPrint('[DELETE_ACCOUNT] failed to clear box $name: $e\n$st');
+        if (kDebugMode) {
+          debugPrint('[DELETE_ACCOUNT] failed to delete Hive key: $e\n$st');
+        }
+      }
+
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+      } on Exception catch (e, st) {
+        if (kDebugMode) {
+          debugPrint(
+            '[DELETE_ACCOUNT] failed to clear SharedPreferences: $e\n$st',
+          );
+        }
+      }
+
+      // D2P — Beta instrumentation: account deleted (irreversible data wipe)
+      ref
+          .read(analyticsProvider)
+          .trackEvent(TransactionalEvents.accountDeleted);
+      if (mounted) context.go(RouteNames.welcome);
+    } on Exception catch (e, st) {
+      // H-29: surface incomplete deletion to the user so they can retry or
+      // contact support rather than silently leaving data behind.
+      if (kDebugMode) {
+        debugPrint('[DELETE_ACCOUNT] deletion sequence failed: $e\n$st');
+      }
+      if (mounted) {
+        setState(() => _deleting = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Deletion incomplete. Please try again or contact support.',
+            ),
+          ),
+        );
       }
     }
-
-    try {
-      await SecureKeyManager().deleteHiveKey();
-    } on Exception catch (e, st) {
-      debugPrint('[DELETE_ACCOUNT] failed to delete Hive key: $e\n$st');
-    }
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
-    } on Exception catch (e, st) {
-      debugPrint('[DELETE_ACCOUNT] failed to clear SharedPreferences: $e\n$st');
-    }
-
-    // D2P — Beta instrumentation: account deleted (irreversible data wipe)
-    ref.read(analyticsProvider).trackEvent(TransactionalEvents.accountDeleted);
-    if (mounted) context.go(RouteNames.welcome);
   }
 
   // ── Step 2: show confirmation dialog ───────────────────────────────────────

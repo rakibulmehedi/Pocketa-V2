@@ -142,7 +142,7 @@ void main() {
 
       expect(result, isNotNull);
       expect(result!.nudgeType, equals(NudgeType.confirmOverdue));
-      expect(result.title, contains('[Client] was expected'));
+      expect(result.title, contains('a client was expected'));
       expect(result.body, contains('Confirm or update'));
     });
 

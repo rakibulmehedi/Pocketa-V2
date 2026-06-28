@@ -118,15 +118,6 @@ class AppTheme {
         space: 0,
       ),
 
-      // ── BottomNavigationBar ────────────────────────────────────────────────
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: colors.surface,
-        selectedItemColor: colors.interactive,
-        unselectedItemColor: colors.inkTertiary,
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-      ),
-
       // ── TextTheme — mapped from HelmTypography ──────────────────────────
       textTheme: TextTheme(
         displayLarge:  typography.displayLarge,

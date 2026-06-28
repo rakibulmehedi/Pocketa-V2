@@ -7,7 +7,7 @@
 //   - If onboarding IS completed     → redirect / and /welcome to /home
 //
 // Shell structure (UX-1.07):
-//   ShellRoute wraps the 3 primary tabs (Signal, Flow, Trace).
+//   ShellRoute wraps the 3 primary tabs (Home, Pipeline, Spend).
 //   Splash, Welcome, Onboarding, and modal routes live outside the shell.
 //
 // All route paths live in RouteNames — never duplicate strings here.
@@ -16,15 +16,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
+import 'package:helm/core/themes/helm_colors.dart';
+import 'package:helm/core/themes/helm_typography.dart';
+import 'package:helm/l10n/app_localization.dart';
+import 'package:helm/features/spend/presentation/views/spend_screen.dart';
+
 import 'package:helm/config/router/route_names.dart';
 import 'package:helm/core/constants/app_box_names.dart';
 import 'package:helm/core/local_storage/shared_pref_service.dart';
 import 'package:helm/core/utils/input_validator.dart';
-import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/features/auth/presentation/providers/auth_provider.dart'
     show authRefreshListenable, isSessionAuthenticated;
 import 'package:helm/features/auth/presentation/views/magic_link_screen.dart';
-import 'package:helm/core/themes/helm_typography.dart';
 import 'package:helm/features/auth/presentation/views/pin_entry_screen.dart';
 import 'package:helm/features/auth/presentation/views/pin_setup_screen.dart';
 import 'package:helm/features/dashboard/presentation/views/dashboard_screen.dart';
@@ -64,7 +67,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const OnboardingScreen(),
     ),
 
-    // ── Shell: 4-tab main app (UX-1.07) ──────────────────────────────────────
+    // ── Shell: 3-tab main app (UX-1.07) ──────────────────────────────────────
     ShellRoute(
       builder: (context, state, child) =>
           _AppShell(location: state.matchedLocation, child: child),
@@ -80,14 +83,9 @@ final GoRouter appRouter = GoRouter(
           builder: (context, state) => const PipelineScreen(),
         ),
         GoRoute(
-          path: RouteNames.trace,
-          name: 'trace',
-          builder: (context, state) => const AuditLogScreen(),
-        ),
-        GoRoute(
-          path: RouteNames.settings,
-          name: 'settings',
-          builder: (context, state) => const StsSettingsScreen(),
+          path: RouteNames.spend,
+          name: 'spend',
+          builder: (context, state) => const SpendScreen(),
         ),
       ],
     ),
@@ -102,9 +100,12 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.editTransaction,
       name: 'editTransaction',
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-        final safeId = InputValidator.isValidId(id) ? id : null;
-        return AddTransactionScreen(transactionId: safeId);
+        // L-6: format-guard id path parameter — reject empty or oversized values.
+        final id = state.pathParameters['id'] ?? '';
+        if (id.isEmpty || id.length > 100 || !InputValidator.isValidId(id)) {
+          return const AddTransactionScreen();
+        }
+        return AddTransactionScreen(transactionId: id);
       },
     ),
     GoRoute(
@@ -116,14 +117,25 @@ final GoRouter appRouter = GoRouter(
       path: RouteNames.editIncome,
       name: 'editIncome',
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-        if (!InputValidator.isValidId(id)) return const AddIncomeScreen();
+        // L-6: format-guard id path parameter — reject empty or oversized values.
+        final id = state.pathParameters['id'] ?? '';
+        if (id.isEmpty || id.length > 100 || !InputValidator.isValidId(id)) {
+          return const AddIncomeScreen();
+        }
         return AddIncomeScreen(incomeId: id);
       },
     ),
     GoRoute(
       path: RouteNames.stsSettings,
       name: 'stsSettings',
+      builder: (context, state) => const StsSettingsScreen(),
+    ),
+    // /settings is the canonical push-overlay alias for /sts-settings.
+    // Kept separate so existing callers (Dashboard gear, notification centre,
+    // next-best-action card) and future deep-links all resolve correctly.
+    GoRoute(
+      path: RouteNames.settings,
+      name: 'settings',
       builder: (context, state) => const StsSettingsScreen(),
     ),
 
@@ -168,6 +180,21 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteNames.auditLog,
       name: 'auditLog',
+      builder: (context, state) => const AuditLogScreen(),
+    ),
+    // /trace is the canonical push-overlay alias for /audit-log.
+    // _identityRoutes guest-gating uses RouteNames.trace, so this must stay
+    // registered as a standalone route.
+    GoRoute(
+      path: RouteNames.trace,
+      name: 'trace',
+      builder: (context, state) => const AuditLogScreen(),
+    ),
+    // /history (M-13): Settings + History AppBar actions use this path.
+    // Resolves to AuditLogScreen, same as /audit-log and /trace.
+    GoRoute(
+      path: RouteNames.history,
+      name: 'history',
       builder: (context, state) => const AuditLogScreen(),
     ),
 
@@ -225,16 +252,10 @@ const List<_TabItem> _tabs = [
     tooltip: 'Income pipeline',
   ),
   _TabItem(
-    path: RouteNames.trace,
-    icon: Icons.receipt_long_rounded,
-    label: 'History',
-    tooltip: 'History and audit trail',
-  ),
-  _TabItem(
-    path: RouteNames.settings,
-    icon: Icons.settings_rounded,
-    label: 'Settings',
-    tooltip: 'Settings',
+    path: RouteNames.spend,
+    icon: Icons.wallet_rounded,
+    label: 'Spend',
+    tooltip: 'Money spent',
   ),
 ];
 
@@ -257,6 +278,11 @@ class _AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.textStyles;
+    final l10n = context.l10n;
+
+    // Localized label / tooltip pairs — same order as _tabs.
+    final tabLabels = [l10n.tabHome, l10n.tabPipeline, l10n.tabSpend];
+    final tabTips = [l10n.tabHomeTip, l10n.tabPipelineTip, l10n.tabSpendTip];
 
     return Scaffold(
       body: child,
@@ -270,15 +296,14 @@ class _AppShell extends StatelessWidget {
         selectedLabelStyle: typography.labelSm,
         unselectedLabelStyle: typography.labelSm,
         elevation: 0,
-        items: _tabs
-            .map(
-              (t) => BottomNavigationBarItem(
-                icon: Icon(t.icon),
-                label: t.label,
-                tooltip: t.tooltip,
-              ),
-            )
-            .toList(),
+        items: List.generate(
+          _tabs.length,
+          (i) => BottomNavigationBarItem(
+            icon: Icon(_tabs[i].icon),
+            label: tabLabels[i],
+            tooltip: tabTips[i],
+          ),
+        ),
       ),
     );
   }

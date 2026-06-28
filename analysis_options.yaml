@@ -28,6 +28,10 @@ linter:
     prefer_final_fields: true
     avoid_returning_null_for_void: true
     unawaited_futures: true
+    avoid_dynamic_calls: true
+    prefer_final_locals: true
+    cancel_subscriptions: true
+    close_sinks: true
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

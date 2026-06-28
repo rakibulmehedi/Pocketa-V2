@@ -1100,5 +1100,104 @@
   "@auditRelativeHoursAgo": {
     "description": "Relative time in hours",
     "placeholders": { "hours": { "type": "int" } }
-  }
+  },
+  "spendTitle": "Spend",
+  "@spendTitle": { "description": "Spend tab screen title" },
+  "spendSummaryLabel": "Spent this month · reduces Safe-to-Spend",
+  "@spendSummaryLabel": { "description": "Spend tab summary strip label" },
+  "spendEmptyTitle": "Nothing spent yet",
+  "@spendEmptyTitle": { "description": "Spend tab empty-state title" },
+  "spendEmptyBody": "Record money you have already paid out — each payment updates your Safe-to-Spend.",
+  "@spendEmptyBody": { "description": "Spend tab empty-state teaching body" },
+  "spendFabLabel": "Add a payment",
+  "@spendFabLabel": { "description": "Spend tab add-payment FAB label" },
+
+  "tabHome": "Home",
+  "@tabHome": { "description": "Bottom navigation tab label: home / dashboard" },
+
+  "tabPipeline": "Pipeline",
+  "@tabPipeline": { "description": "Bottom navigation tab label: income pipeline" },
+
+  "tabSpend": "Spend",
+  "@tabSpend": { "description": "Bottom navigation tab label: spend / cash-out" },
+
+  "tabHomeTip": "Safe-to-Spend",
+  "@tabHomeTip": { "description": "Bottom navigation tab tooltip: home" },
+
+  "tabPipelineTip": "Income pipeline",
+  "@tabPipelineTip": { "description": "Bottom navigation tab tooltip: pipeline" },
+
+  "tabSpendTip": "Money spent",
+  "@tabSpendTip": { "description": "Bottom navigation tab tooltip: spend" },
+
+  "viewAuditTrail": "View audit trail",
+  "@viewAuditTrail": { "description": "Tooltip on history icon buttons in app bar" },
+
+  "viewTrace": "View trace",
+  "@viewTrace": { "description": "Label on the trace TextButton inside HelmNextEventCard" },
+
+  "compromisedDeviceTitle": "This device appears to be compromised",
+  "@compromisedDeviceTitle": { "description": "Heading on the non-dismissible compromised-device blocking screen" },
+
+  "compromisedDeviceBody": "Helm cannot run on rooted or jailbroken devices because your local financial data could be exposed. Please use an unmodified device.",
+  "@compromisedDeviceBody": { "description": "Body copy on the compromised-device blocking screen" },
+
+  "closeHelm": "Close Helm",
+  "@closeHelm": { "description": "Button label on the compromised-device blocking screen" },
+
+  "cautionCritical": "Critical",
+  "@cautionCritical": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=true" },
+
+  "cautionWarning": "Warning",
+  "@cautionWarning": { "description": "Severity word used in HelmCautionCard semantics label when isCritical=false" },
+
+  "csvExportWarning": "CSV export contains unencrypted financial data. Only share with trusted recipients.",
+  "@csvExportWarning": { "description": "H-24: security warning shown above the CSV export button" },
+
+  "deleteConfirmTitle": "Confirm deletion",
+  "@deleteConfirmTitle": { "description": "H-39: confirmation dialog title before deleting an item" },
+
+  "delete": "Delete",
+  "@delete": { "description": "H-39: confirm delete action label in confirmation dialog" },
+
+  "rateLimitError": "Too many attempts. Please wait 1 minute.",
+  "@rateLimitError": { "description": "M-33: rate limit error shown when too many auth attempts occur" },
+
+  "accountLockedError": "Account temporarily locked. Try again in {minutes} minutes.",
+  "@accountLockedError": {
+    "description": "M-33: account lockout error with time remaining",
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+
+  "exportError": "Export failed. Check storage permissions.",
+  "@exportError": { "description": "M-33: user-friendly export failure message" },
+
+  "exportWarningTitle": "Sharing financial data",
+  "@exportWarningTitle": { "description": "L-9: one-time pre-share warning dialog title" },
+
+  "exportWarningBody": "You are about to share financial data. Only share with trusted recipients.",
+  "@exportWarningBody": { "description": "L-9: one-time pre-share warning dialog body" },
+
+  "ok": "OK",
+  "@ok": { "description": "Generic acknowledgement button label" },
+
+  "biometricEnableTitle": "Enable Biometrics",
+  "@biometricEnableTitle": { "description": "Biometric opt-in sheet: title" },
+
+  "biometricEnableSubtitle": "Use Face ID or fingerprint to unlock Helm",
+  "@biometricEnableSubtitle": { "description": "Biometric opt-in sheet: subtitle" },
+
+  "biometricEnableButton": "Enable",
+  "@biometricEnableButton": { "description": "Biometric opt-in sheet: confirm button" },
+
+  "biometricSkipButton": "Not now",
+  "@biometricSkipButton": { "description": "Biometric opt-in sheet: skip button" },
+
+  "biometricAuthReason": "Unlock Helm",
+  "@biometricAuthReason": { "description": "OS biometric dialog reason string" },
+
+  "biometricUsePinFallback": "Use PIN instead",
+  "@biometricUsePinFallback": { "description": "PIN entry: tap to dismiss biometric and enter PIN" }
 }

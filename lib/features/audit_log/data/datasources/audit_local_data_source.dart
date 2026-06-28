@@ -40,6 +40,10 @@ abstract class AuditLocalDataSource {
 ///
 /// The box must be opened before any method is called.
 /// Opening is managed exclusively by [HiveService.init()].
+///
+/// entityId is a string reference with no FK validation. Acceptable for MVP:
+/// audit log is append-only; entities are never deleted without a corresponding
+/// audit event.
 class AuditLocalDataSourceImpl implements AuditLocalDataSource {
   final AuditChainService _chainService;
 

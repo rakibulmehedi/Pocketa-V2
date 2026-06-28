@@ -22,8 +22,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:helm/config/router/route_names.dart';
+import 'package:helm/core/widgets/helm_icon.dart';
 import 'package:helm/core/analytics/analytics_service.dart';
 import 'package:helm/core/analytics/event_registry.dart';
 import 'package:helm/core/local_storage/shared_pref_service.dart';
@@ -243,12 +245,47 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         actions: [
+          if (!SharedPrefServices.getGuestMode())
+            IconButton(
+              key: const ValueKey('dashboard-audit-link'),
+              tooltip: context.l10n.viewAuditTrail,
+              icon: const HelmIcon(LucideIcons.history, size: HelmIconSize.lg),
+              onPressed: () => context.push(RouteNames.trace),
+            ),
+          IconButton(
+            key: const ValueKey('dashboard-settings-gear'),
+            tooltip: context.l10n.settings,
+            icon: const HelmIcon(LucideIcons.settings, size: HelmIconSize.lg),
+            onPressed: () => context.push(RouteNames.settings),
+          ),
           // UX-1.11 — dev reset gated to debug builds only.
           if (kDebugMode)
             IconButton(
               tooltip: context.l10n.devResetOnboarding,
               icon: const Icon(Icons.refresh_rounded, size: 20),
               onPressed: () async {
+                // M-30: confirmation dialog prevents accidental resets.
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text('Reset all data?'),
+                    content: const Text(
+                      'This will delete all income, transactions, and settings. '
+                      'Cannot be undone.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Reset'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed != true) return;
                 await SharedPrefServices.setOnboardingCompleted(false);
                 if (context.mounted) context.go(RouteNames.welcome);
               },

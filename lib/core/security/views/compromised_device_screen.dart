@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/core/themes/helm_spacing.dart';
 import 'package:helm/core/themes/helm_typography.dart';
+import 'package:helm/l10n/app_localization.dart';
 
 class CompromisedDeviceScreen extends StatelessWidget {
   const CompromisedDeviceScreen({super.key});
@@ -35,7 +36,7 @@ class CompromisedDeviceScreen extends StatelessWidget {
               ),
               const SizedBox(height: HelmSpacing.s5),
               Text(
-                'This device appears to be compromised',
+                context.l10n.compromisedDeviceTitle,
                 style: typography.headingMd.copyWith(
                   color: colors.inkPrimary,
                 ),
@@ -43,9 +44,7 @@ class CompromisedDeviceScreen extends StatelessWidget {
               ),
               const SizedBox(height: HelmSpacing.s3),
               Text(
-                'Helm cannot run on rooted or jailbroken devices because your '
-                'local financial data could be exposed. Please use an '
-                'unmodified device.',
+                context.l10n.compromisedDeviceBody,
                 style: typography.bodyMd.copyWith(
                   color: colors.inkSecondary,
                 ),
@@ -63,7 +62,7 @@ class CompromisedDeviceScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () => SystemNavigator.pop(),
-                child: const Text('Close Helm'),
+                child: Text(context.l10n.closeHelm),
               ),
             ],
           ),

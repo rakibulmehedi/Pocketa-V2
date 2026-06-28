@@ -695,3 +695,19 @@ re-introduction of the `/income` route.
 **Verification:** `dart analyze` 0/0/0, 444 pass / 1 skip (non-golden); 2 new History goldens added (light + dark).
 
 **Known limitation (tracked):** `verifyChain` re-bases from an empty genesis hash, but `AuditLocalDataSourceImpl._pruneOldEvents` deletes events past `kAuditRetentionDays` without re-basing the hash chain. Once any event ages past retention, an honest ledger will report a **false** "Integrity issue detected" (a false alarm, never a false "verified" — the fail-loud guarantee holds). Cannot fire within the closed-beta horizon. Fix touches the audit-write/retention path (a Non-Goal of this sub-project) and awaits Chief Architect direction. See LESSONS.md §35.
+
+---
+
+## Decision 042 — Nav restructure to Home/Pipeline/Spend + HelmNavBar (2026-06-21)
+
+**Context:** 4-tab Material `BottomNavigationBar` did not adopt VIS-024 (color+underline active state) or VIS-022 (Lucide outline icons). Settings and History occupied primary tab slots despite low daily frequency.
+
+**Decision:** 3 primary tabs (Home, Pipeline, Spend) via custom `HelmNavBar` + `HelmIcon`. Settings → Dashboard app-bar gear (push). History → guest-gated Pipeline action (push). Added `lucide_icons_flutter`. New Spend tab reuses the transaction repository, framed as outflows that reduce Safe-to-Spend — NOT an expense tracker (no categories/charts/budgets), per Final Doctrine.
+
+**Key technical note:** `lucide_icons_flutter 3.1.14+2` used instead of `phosphor_flutter` — `phosphor_flutter` is incompatible with Flutter 3.44 (extends now-final `IconData` class).
+
+**New widgets:** `HelmIcon` (VIS-041 wrapper, `HelmIconSize` enum), `HelmNavBar` (VIS-024 18×2pt underline, VIS-013 56pt height, VIS-022 outline-only icons).
+
+**Doctrine:** `SpendScreen` shows money already paid out — no categories, charts, or budgets. Safe-to-Spend framing preserved.
+
+**Scope guard:** `AddTransactionScreen` internals, app-wide Lucide migration, and `/settings` vs `/sts-settings` de-dup are filed as follow-ups (TASKS.md), not in this change.

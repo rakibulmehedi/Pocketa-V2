@@ -261,15 +261,10 @@ class _AddIncomeScreenState extends ConsumerState<AddIncomeScreen> {
       return const _IncomeNotFoundView();
     }
 
-    return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        // Fallback for edge cases where canPop is true but pop didn't complete
-        if (mounted) context.pop();
-      },
-      child: Scaffold(
-        backgroundColor: colors.canvas,
+    // L-12: PopScope(canPop:true) was dead code — onPopInvokedWithResult always
+    // received didPop=true and returned immediately; fallback branch was unreachable.
+    return Scaffold(
+      backgroundColor: colors.canvas,
         appBar: AppBar(
           title: Text(
             isEditing ? l10n.editIncome : l10n.addIncome,
@@ -513,7 +508,6 @@ class _AddIncomeScreenState extends ConsumerState<AddIncomeScreen> {
           ),
         ),
         ),
-      ),
       ),
     );
   }

@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/core/themes/helm_spacing.dart';
 import 'package:helm/core/themes/helm_typography.dart';
+import 'package:helm/l10n/app_localization.dart';
 
 class HelmCautionCard extends StatelessWidget {
   final Widget child;
@@ -55,8 +56,10 @@ class HelmCautionCard extends StatelessWidget {
       bottom: BorderSide(color: colors.divider, width: HelmSpacing.cardBorder),
     );
 
+    final severityWord =
+        isCritical ? context.l10n.cautionCritical : context.l10n.cautionWarning;
     return Semantics(
-      label: '${isCritical ? "Critical" : "Warning"} notice'
+      label: '$severityWord notice'
           '${title != null ? ": $title" : ""}',
       container: true,
       child: ClipRRect(

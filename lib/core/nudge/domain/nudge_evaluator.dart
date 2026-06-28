@@ -100,7 +100,7 @@ class NudgeEvaluator {
       channel: NudgeChannel.push,
       title: hasMultiple
           ? '${context.overdueCount} payments past their expected date'
-          : 'A payment from [Client] was expected',
+          : 'A payment from a client was expected',
       body: hasMultiple
           ? '${context.overdueCount} payments are past their expected date. Tap to review.'
           : 'A payment was expected. Confirm or update?',

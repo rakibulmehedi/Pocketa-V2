@@ -1111,4 +1111,110 @@ class AppLocalizationsEn extends AppLocalizations {
   String auditRelativeHoursAgo(int hours) {
     return '${hours}h ago';
   }
+
+  @override
+  String get spendTitle => 'Spend';
+
+  @override
+  String get spendSummaryLabel => 'Spent this month · reduces Safe-to-Spend';
+
+  @override
+  String get spendEmptyTitle => 'Nothing spent yet';
+
+  @override
+  String get spendEmptyBody =>
+      'Record money you have already paid out — each payment updates your Safe-to-Spend.';
+
+  @override
+  String get spendFabLabel => 'Add a payment';
+
+  @override
+  String get tabHome => 'Home';
+
+  @override
+  String get tabPipeline => 'Pipeline';
+
+  @override
+  String get tabSpend => 'Spend';
+
+  @override
+  String get tabHomeTip => 'Safe-to-Spend';
+
+  @override
+  String get tabPipelineTip => 'Income pipeline';
+
+  @override
+  String get tabSpendTip => 'Money spent';
+
+  @override
+  String get viewAuditTrail => 'View audit trail';
+
+  @override
+  String get viewTrace => 'View trace';
+
+  @override
+  String get compromisedDeviceTitle => 'This device appears to be compromised';
+
+  @override
+  String get compromisedDeviceBody =>
+      'Helm cannot run on rooted or jailbroken devices because your local financial data could be exposed. Please use an unmodified device.';
+
+  @override
+  String get closeHelm => 'Close Helm';
+
+  @override
+  String get cautionCritical => 'Critical';
+
+  @override
+  String get cautionWarning => 'Warning';
+
+  @override
+  String get csvExportWarning =>
+      'CSV export contains unencrypted financial data. Only share with trusted recipients.';
+
+  @override
+  String get deleteConfirmTitle => 'Confirm deletion';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get rateLimitError => 'Too many attempts. Please wait 1 minute.';
+
+  @override
+  String accountLockedError(int minutes) {
+    return 'Account temporarily locked. Try again in $minutes minutes.';
+  }
+
+  @override
+  String get exportError => 'Export failed. Check storage permissions.';
+
+  @override
+  String get exportWarningTitle => 'Sharing financial data';
+
+  @override
+  String get exportWarningBody =>
+      'You are about to share financial data. Only share with trusted recipients.';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get biometricEnableTitle => 'Enable Biometrics';
+
+  @override
+  String get biometricEnableSubtitle =>
+      'Use Face ID or fingerprint to unlock Helm';
+
+  @override
+  String get biometricEnableButton => 'Enable';
+
+  @override
+  String get biometricSkipButton => 'Not now';
+
+  @override
+  String get biometricAuthReason => 'Unlock Helm';
+
+  @override
+  String get biometricUsePinFallback => 'Use PIN instead';
 }

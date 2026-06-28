@@ -1100,4 +1100,111 @@ class AppLocalizationsBn extends AppLocalizations {
   String auditRelativeHoursAgo(int hours) {
     return '$hours ঘণ্টা আগে';
   }
+
+  @override
+  String get spendTitle => 'ব্যয়';
+
+  @override
+  String get spendSummaryLabel => 'এই মাসে ব্যয় · নিরাপদ ব্যয়সীমা কমায়';
+
+  @override
+  String get spendEmptyTitle => 'এখনো কিছু ব্যয় হয়নি';
+
+  @override
+  String get spendEmptyBody =>
+      'আপনি যে অর্থ ইতিমধ্যে পরিশোধ করেছেন তা রেকর্ড করুন — প্রতিটি পেমেন্ট আপনার নিরাপদ ব্যয়সীমা আপডেট করে।';
+
+  @override
+  String get spendFabLabel => 'পেমেন্ট যোগ করুন';
+
+  @override
+  String get tabHome => 'হোম';
+
+  @override
+  String get tabPipeline => 'পাইপলাইন';
+
+  @override
+  String get tabSpend => 'ব্যয়';
+
+  @override
+  String get tabHomeTip => 'নিরাপদ ব্যয়সীমা';
+
+  @override
+  String get tabPipelineTip => 'আয়ের পাইপলাইন';
+
+  @override
+  String get tabSpendTip => 'ব্যয় হয়েছে';
+
+  @override
+  String get viewAuditTrail => 'অডিট ট্রেইল দেখুন';
+
+  @override
+  String get viewTrace => 'ট্রেস দেখুন';
+
+  @override
+  String get compromisedDeviceTitle => 'এই ডিভাইসটি ঝুঁকিপূর্ণ মনে হচ্ছে';
+
+  @override
+  String get compromisedDeviceBody =>
+      'রুটেড বা জেলব্রেক করা ডিভাইসে হেল্ম চলতে পারে না কারণ আপনার স্থানীয় আর্থিক ডেটা প্রকাশ হয়ে যেতে পারে। অনুগ্রহ করে একটি অপরিবর্তিত ডিভাইস ব্যবহার করুন।';
+
+  @override
+  String get closeHelm => 'হেল্ম বন্ধ করুন';
+
+  @override
+  String get cautionCritical => 'সংকটজনক';
+
+  @override
+  String get cautionWarning => 'সতর্কতা';
+
+  @override
+  String get csvExportWarning =>
+      'CSV এক্সপোর্টে আনএনক্রিপ্টেড আর্থিক তথ্য রয়েছে। শুধুমাত্র বিশ্বস্ত প্রাপকদের সাথে শেয়ার করুন।';
+
+  @override
+  String get deleteConfirmTitle => 'মুছে ফেলা নিশ্চিত করুন';
+
+  @override
+  String get delete => 'মুছুন';
+
+  @override
+  String get rateLimitError =>
+      'অনেকবার চেষ্টা হয়েছে। ১ মিনিট পরে আবার চেষ্টা করুন।';
+
+  @override
+  String accountLockedError(int minutes) {
+    return 'অ্যাকাউন্ট সাময়িক বন্ধ। $minutes মিনিট পরে আবার চেষ্টা করুন।';
+  }
+
+  @override
+  String get exportError => 'রপ্তানি ব্যর্থ হয়েছে। স্টোরেজ পার্মিশন চেক করুন।';
+
+  @override
+  String get exportWarningTitle => 'আর্থিক তথ্য শেয়ার করা হচ্ছে';
+
+  @override
+  String get exportWarningBody =>
+      'আপনার আর্থিক তথ্য শেয়ার করতে যাচ্ছেন। শুধুমাত্র বিশ্বস্ত ব্যক্তির সাথে শেয়ার করুন।';
+
+  @override
+  String get ok => 'ঠিক আছে';
+
+  @override
+  String get biometricEnableTitle => 'বায়োমেট্রিক চালু করুন';
+
+  @override
+  String get biometricEnableSubtitle =>
+      'Helm আনলক করতে Face ID বা আঙুলের ছাপ ব্যবহার করুন';
+
+  @override
+  String get biometricEnableButton => 'চালু করুন';
+
+  @override
+  String get biometricSkipButton => 'এখন না';
+
+  @override
+  String get biometricAuthReason => 'Helm আনলক করুন';
+
+  @override
+  String get biometricUsePinFallback => 'PIN দিয়ে লগইন করুন';
 }

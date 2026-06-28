@@ -14,6 +14,7 @@ abstract final class RouteNames {
   static const String dashboard = '/home';
   static const String home = '/home';
   static const String pipeline = '/pipeline';
+  static const String spend = '/spend';
   static const String trace = '/trace';
   static const String settings = '/settings';
 
@@ -35,6 +36,9 @@ abstract final class RouteNames {
 
   // ── audit log (D1.07) ─────────────────────────────────────────────────────
   static const String auditLog = '/audit-log';
+
+  // ── history (M-13: alias for audit-log, surfaced in Settings / History) ───
+  static const String history = '/history';
 
   // ── account management (D1.10) ────────────────────────────────────────────
   static const String deleteAccount = '/delete-account';

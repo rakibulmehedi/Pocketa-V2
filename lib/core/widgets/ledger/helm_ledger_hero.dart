@@ -47,9 +47,11 @@ class HelmLedgerHero extends StatelessWidget {
     final typography = context.textStyles;
     final railColor = ledgerStateColor(context, state);
 
+    // H-41: formatBDTCompact now uses '৳ ' prefix (U+09F3); strip the prefix
+    // and re-attach without trailing space for tight hero display.
     final amount = showUnavailable
         ? '—' // em dash
-        : '৳${NumberFormatter.formatBDTCompact(safeToSpend).replaceFirst('tk ', '')}';
+        : NumberFormatter.formatBDTCompact(safeToSpend);
 
     return Semantics(
       label: 'Safe to spend now '
