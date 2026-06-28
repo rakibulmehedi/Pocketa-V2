@@ -8,14 +8,19 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:helm/core/constants/app_box_names.dart';
 import 'package:helm/core/utils/input_validator.dart';
 import 'package:helm/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:helm/features/auth/data/datasources/biometric_datasource.dart';
 import 'package:helm/features/auth/data/models/session_model.dart';
 import 'package:helm/features/auth/domain/entities/session_entity.dart';
 import 'package:helm/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final BiometricDataSource biometricDataSource;
 
-  AuthRepositoryImpl({required this.remoteDataSource});
+  AuthRepositoryImpl({
+    required this.remoteDataSource,
+    BiometricDataSource? biometricDataSource,
+  }) : biometricDataSource = biometricDataSource ?? BiometricDataSource();
 
   // ── Session persistence key ─────────────────────────────────────────────
 
@@ -74,17 +79,11 @@ class AuthRepositoryImpl implements AuthRepository {
   // ── Biometric ───────────────────────────────────────────────────────────
 
   @override
-  Future<bool> isBiometricAvailable() async {
-    // local_auth package pending Chief Architect approval.
-    // Returns false by default — PIN is the fallback.
-    return false;
-  }
+  Future<bool> isBiometricAvailable() => biometricDataSource.isAvailable();
 
   @override
-  Future<bool> authenticateWithBiometrics() async {
-    // local_auth package pending Chief Architect approval.
-    return false;
-  }
+  Future<bool> authenticateWithBiometrics() =>
+      biometricDataSource.authenticate('Unlock Helm');
 
   // ── Helpers ─────────────────────────────────────────────────────────────
 
