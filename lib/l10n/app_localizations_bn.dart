@@ -1188,4 +1188,23 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get ok => 'ঠিক আছে';
+
+  @override
+  String get biometricEnableTitle => 'বায়োমেট্রিক চালু করুন';
+
+  @override
+  String get biometricEnableSubtitle =>
+      'Helm আনলক করতে Face ID বা আঙুলের ছাপ ব্যবহার করুন';
+
+  @override
+  String get biometricEnableButton => 'চালু করুন';
+
+  @override
+  String get biometricSkipButton => 'এখন না';
+
+  @override
+  String get biometricAuthReason => 'Helm আনলক করুন';
+
+  @override
+  String get biometricUsePinFallback => 'PIN দিয়ে লগইন করুন';
 }

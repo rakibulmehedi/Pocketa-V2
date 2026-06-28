@@ -1015,5 +1015,23 @@
   "@exportWarningBody": { "description": "L-9: one-time pre-share warning dialog body" },
 
   "ok": "ঠিক আছে",
-  "@ok": { "description": "Generic acknowledgement button label" }
+  "@ok": { "description": "Generic acknowledgement button label" },
+
+  "biometricEnableTitle": "বায়োমেট্রিক চালু করুন",
+  "@biometricEnableTitle": { "description": "Biometric opt-in sheet: title" },
+
+  "biometricEnableSubtitle": "Helm আনলক করতে Face ID বা আঙুলের ছাপ ব্যবহার করুন",
+  "@biometricEnableSubtitle": { "description": "Biometric opt-in sheet: subtitle" },
+
+  "biometricEnableButton": "চালু করুন",
+  "@biometricEnableButton": { "description": "Biometric opt-in sheet: confirm button" },
+
+  "biometricSkipButton": "এখন না",
+  "@biometricSkipButton": { "description": "Biometric opt-in sheet: skip button" },
+
+  "biometricAuthReason": "Helm আনলক করুন",
+  "@biometricAuthReason": { "description": "OS biometric dialog reason string" },
+
+  "biometricUsePinFallback": "PIN দিয়ে লগইন করুন",
+  "@biometricUsePinFallback": { "description": "PIN entry: tap to dismiss biometric and enter PIN" }
 }

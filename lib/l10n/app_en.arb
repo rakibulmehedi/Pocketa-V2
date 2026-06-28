@@ -1181,5 +1181,23 @@
   "@exportWarningBody": { "description": "L-9: one-time pre-share warning dialog body" },
 
   "ok": "OK",
-  "@ok": { "description": "Generic acknowledgement button label" }
+  "@ok": { "description": "Generic acknowledgement button label" },
+
+  "biometricEnableTitle": "Enable Biometrics",
+  "@biometricEnableTitle": { "description": "Biometric opt-in sheet: title" },
+
+  "biometricEnableSubtitle": "Use Face ID or fingerprint to unlock Helm",
+  "@biometricEnableSubtitle": { "description": "Biometric opt-in sheet: subtitle" },
+
+  "biometricEnableButton": "Enable",
+  "@biometricEnableButton": { "description": "Biometric opt-in sheet: confirm button" },
+
+  "biometricSkipButton": "Not now",
+  "@biometricSkipButton": { "description": "Biometric opt-in sheet: skip button" },
+
+  "biometricAuthReason": "Unlock Helm",
+  "@biometricAuthReason": { "description": "OS biometric dialog reason string" },
+
+  "biometricUsePinFallback": "Use PIN instead",
+  "@biometricUsePinFallback": { "description": "PIN entry: tap to dismiss biometric and enter PIN" }
 }

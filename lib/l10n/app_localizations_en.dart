@@ -1198,4 +1198,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get biometricEnableTitle => 'Enable Biometrics';
+
+  @override
+  String get biometricEnableSubtitle =>
+      'Use Face ID or fingerprint to unlock Helm';
+
+  @override
+  String get biometricEnableButton => 'Enable';
+
+  @override
+  String get biometricSkipButton => 'Not now';
+
+  @override
+  String get biometricAuthReason => 'Unlock Helm';
+
+  @override
+  String get biometricUsePinFallback => 'Use PIN instead';
 }
