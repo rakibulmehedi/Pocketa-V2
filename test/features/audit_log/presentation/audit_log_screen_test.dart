@@ -73,7 +73,7 @@ void main() {
     final events = [
       AuditEvent(
         id: 'a',
-        timestamp: DateTime.now().subtract(const Duration(hours: 1)),
+        timestamp: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 12),
         eventType: AuditEventType.created,
         entityType: AuditEntityType.income,
         entityId: 'e1',

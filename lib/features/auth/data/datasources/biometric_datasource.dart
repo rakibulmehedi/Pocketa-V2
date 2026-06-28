@@ -26,8 +26,10 @@ class BiometricDataSource {
     try {
       return await _auth.authenticate(
         localizedReason: reason,
-        biometricOnly: true,
-        persistAcrossBackgrounding: true,
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
       );
     } on Exception {
       return false;
