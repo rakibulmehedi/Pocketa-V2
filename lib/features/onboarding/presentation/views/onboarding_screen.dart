@@ -227,7 +227,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   // Step 5 — First pipeline entry (optional, M5)
                   FirstPipelinePage(
                     onAddEntry: (entry) => _addPipelineEntryAndComplete(entry),
-                    onSkip: () => _completeOnboarding(),
                   ),
                 ],
               ),

@@ -255,26 +255,11 @@ class _FixedCostsPageState extends State<FixedCostsPage> {
                                 typo.bodyMd.copyWith(color: colors.inkSecondary),
                           ),
                           const SizedBox(height: HelmSpacing.s4),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: AppButton(
-                                  label: l10n.skipForNow,
-                                  onPressed: () => widget.onContinue([]),
-                                  isEnabled: true,
-                                  type: AppButtonType.secondary,
-                                ),
-                              ),
-                              const SizedBox(width: HelmSpacing.s2),
-                              Expanded(
-                                child: AppButton(
-                                  label: l10n.letMeAddSome,
-                                  onPressed: () =>
-                                      setState(() => _showZeroStateReask = false),
-                                  isEnabled: true,
-                                ),
-                              ),
-                            ],
+                          AppButton(
+                            label: l10n.letMeAddSome,
+                            onPressed: () =>
+                                setState(() => _showZeroStateReask = false),
+                            isEnabled: true,
                           ),
                         ],
                       ),
