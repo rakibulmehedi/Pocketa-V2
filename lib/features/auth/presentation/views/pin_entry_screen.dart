@@ -2,14 +2,17 @@
 //
 // PIN entry (unlock) screen for Helm Trust Layer (D1).
 // Shows attempt counter, locks after 5 failed attempts.
-// Uses custom numpad — no keyboard input.
+// Biometric auto-triggers on load if available and enabled.
+// Uses custom numpad — no keyboard input. Fully responsive layout.
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:helm/config/router/route_names.dart';
 import 'package:helm/core/analytics/analytics_service.dart';
@@ -17,6 +20,7 @@ import 'package:helm/core/analytics/event_registry.dart';
 import 'package:helm/core/themes/helm_colors.dart';
 import 'package:helm/core/themes/helm_typography.dart';
 import 'package:helm/features/auth/presentation/providers/auth_provider.dart';
+import 'package:helm/features/auth/presentation/providers/biometric_provider.dart';
 import 'package:helm/l10n/app_localization.dart';
 
 class PinEntryScreen extends ConsumerStatefulWidget {
@@ -33,17 +37,15 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
   String _currentInput = '';
   String? _message;
   Timer? _lockoutTimer;
+  bool _biometricTriggered = false;
 
   @override
   void initState() {
     super.initState();
-    // D2P — Beta instrumentation: PIN gate presented
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        ref.read(analyticsProvider).trackEvent(
-          TransactionalEvents.pinGateOpened,
-        );
-      }
+      if (!mounted) return;
+      ref.read(analyticsProvider).trackEvent(TransactionalEvents.pinGateOpened);
+      _maybeAutoTriggerBiometric();
     });
     _startLockoutTimerIfNeeded();
   }
@@ -70,9 +72,27 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
     }
   }
 
-  bool get _isLockedOut {
-    final authState = ref.read(authProvider);
-    return authState.isLockedOut;
+  bool get _isLockedOut => ref.read(authProvider).isLockedOut;
+
+  void _maybeAutoTriggerBiometric() {
+    if (_biometricTriggered || _isLockedOut) return;
+    final biometricState = ref.read(biometricProvider).valueOrNull;
+    if (biometricState == null) return;
+    if (biometricState.isAvailable && biometricState.isEnabled) {
+      _biometricTriggered = true;
+      _triggerBiometric();
+    }
+  }
+
+  Future<void> _triggerBiometric() async {
+    unawaited(HapticFeedback.lightImpact());
+    final success = await ref.read(authProvider.notifier).unlockViaBiometrics();
+    if (!mounted) return;
+    if (success) {
+      unawaited(HapticFeedback.mediumImpact());
+      ref.read(analyticsProvider).trackEvent(TransactionalEvents.pinAuthSuccess);
+      context.go(RouteNames.dashboard);
+    }
   }
 
   void _onDigitTap(String digit) {
@@ -105,7 +125,6 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
 
     if (success) {
       unawaited(HapticFeedback.mediumImpact());
-      // D2P — Beta instrumentation: PIN unlock success
       ref.read(analyticsProvider).trackEvent(TransactionalEvents.pinAuthSuccess);
       context.go(RouteNames.dashboard);
       return;
@@ -114,10 +133,11 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
     final authState = ref.read(authProvider);
     unawaited(HapticFeedback.heavyImpact());
     final remaining = _maxAttempts - authState.failedAttempts;
-    // D2P — Beta instrumentation: PIN unlock failure
     ref.read(analyticsProvider).trackEvent(
       TransactionalEvents.pinAuthFailed,
-      properties: {EventProperties.remainingAttempts: remaining.clamp(0, _maxAttempts)},
+      properties: {
+        EventProperties.remainingAttempts: remaining.clamp(0, _maxAttempts),
+      },
     );
     final l10n = context.l10n;
     setState(() {
@@ -147,7 +167,15 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final authState = ref.watch(authProvider);
-    final lockedOut = authState.isLocked && authState.failedAttempts >= _maxAttempts;
+    final lockedOut =
+        authState.isLocked && authState.failedAttempts >= _maxAttempts;
+    final biometricAsync = ref.watch(biometricProvider);
+    final showBiometric =
+        biometricAsync.valueOrNull?.let((s) => s.isAvailable && s.isEnabled && !lockedOut) ??
+            false;
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalSpacing = screenHeight < 680 ? 16.0 : 32.0;
 
     return Scaffold(
       backgroundColor: colors.canvas,
@@ -161,7 +189,7 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
               isLockedOut: lockedOut,
               colors: colors,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: verticalSpacing),
             _PinDots(
               filledCount: _currentInput.length,
               totalCount: _pinLength,
@@ -172,14 +200,19 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
               _NumPad(
                 onDigit: _onDigitTap,
                 onClear: _onClear,
+                onBiometric: showBiometric ? _triggerBiometric : null,
                 colors: colors,
               ),
-            const SizedBox(height: 32),
+            SizedBox(height: verticalSpacing),
           ],
         ),
       ),
     );
   }
+}
+
+extension _Let<T> on T {
+  R let<R>(R Function(T) block) => block(this);
 }
 
 // ---------------------------------------------------------------------------
@@ -247,7 +280,9 @@ class _PinDots extends StatelessWidget {
         final filled = i < filledCount;
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOut,
             width: 16,
             height: 16,
             decoration: BoxDecoration(
@@ -266,7 +301,7 @@ class _PinDots extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Custom numpad (3x4 grid + clear)
+// Custom numpad (3×4 grid + optional biometric key)
 // ---------------------------------------------------------------------------
 
 class _NumPad extends StatelessWidget {
@@ -274,10 +309,12 @@ class _NumPad extends StatelessWidget {
     required this.onDigit,
     required this.onClear,
     required this.colors,
+    this.onBiometric,
   });
 
   final ValueChanged<String> onDigit;
   final VoidCallback onClear;
+  final VoidCallback? onBiometric;
   final HelmColors colors;
 
   static const List<List<String?>> _rows = [
@@ -289,27 +326,50 @@ class _NumPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final keySize = math.min(84.0, math.max(60.0, (screenWidth - 80) / 4.2));
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         children: _rows.map((row) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: row.map((key) {
-              if (key == null) return const SizedBox(width: 72, height: 72);
-              if (key == 'del') {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: row.map((key) {
+                if (key == null) {
+                  return AnimatedOpacity(
+                    opacity: onBiometric != null ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: _NumKey(
+                      size: keySize,
+                      onTap: onBiometric ?? () {},
+                      colors: colors,
+                      child: Icon(
+                        LucideIcons.fingerprint,
+                        size: keySize * 0.38,
+                        color: colors.inkPrimary,
+                      ),
+                    ),
+                  );
+                }
+                if (key == 'del') {
+                  return _NumKey(
+                    size: keySize,
+                    label: '⌫',
+                    onTap: onClear,
+                    colors: colors,
+                  );
+                }
                 return _NumKey(
-                  label: '⌫',
-                  onTap: onClear,
+                  size: keySize,
+                  label: key,
+                  onTap: () => onDigit(key),
                   colors: colors,
                 );
-              }
-              return _NumKey(
-                label: key,
-                onTap: () => onDigit(key),
-                colors: colors,
-              );
-            }).toList(),
+              }).toList(),
+            ),
           );
         }).toList(),
       ),
@@ -319,12 +379,16 @@ class _NumPad extends StatelessWidget {
 
 class _NumKey extends StatelessWidget {
   const _NumKey({
-    required this.label,
+    required this.size,
     required this.onTap,
     required this.colors,
+    this.label,
+    this.child,
   });
 
-  final String label;
+  final double size;
+  final String? label;
+  final Widget? child;
   final VoidCallback onTap;
   final HelmColors colors;
 
@@ -333,21 +397,22 @@ class _NumKey extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 72,
-        height: 72,
+        width: size,
+        height: size,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: colors.surface,
           border: Border.all(color: colors.hairline),
         ),
-        child: Text(
-          label,
-          style: context.textStyles.headingLg.copyWith(
-            fontWeight: FontWeight.w500,
-            color: colors.inkPrimary,
-          ),
-        ),
+        child: child ??
+            Text(
+              label ?? '',
+              style: context.textStyles.headingLg.copyWith(
+                fontWeight: FontWeight.w500,
+                color: colors.inkPrimary,
+              ),
+            ),
       ),
     );
   }
