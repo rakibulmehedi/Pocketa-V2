@@ -70,10 +70,13 @@ void main() {
   });
 
   testWidgets('renders grouped cards for events', (tester) async {
+    final now = DateTime.now();
+    // Pin today's event to noon — avoids midnight boundary flakiness
+    final todayNoon = DateTime(now.year, now.month, now.day, 12);
     final events = [
       AuditEvent(
         id: 'a',
-        timestamp: DateTime.now().subtract(const Duration(hours: 1)),
+        timestamp: todayNoon,
         eventType: AuditEventType.created,
         entityType: AuditEntityType.income,
         entityId: 'e1',
@@ -81,7 +84,7 @@ void main() {
       ),
       AuditEvent(
         id: 'b',
-        timestamp: DateTime.now().subtract(const Duration(days: 10)),
+        timestamp: now.subtract(const Duration(days: 10)),
         eventType: AuditEventType.updated,
         entityType: AuditEntityType.transaction,
         entityId: 'e2',
@@ -95,7 +98,8 @@ void main() {
             const ChainVerification(isIntact: true, verifiedCount: 0),
       ),
     ]));
-    await tester.pump();
+    await tester.pump(); // kick async providers
+    await tester.pump(); // resolve futures
     expect(find.byType(AuditEventCard), findsNWidgets(2));
     expect(find.text('Today'), findsOneWidget);
     expect(find.text('Earlier'), findsOneWidget);
