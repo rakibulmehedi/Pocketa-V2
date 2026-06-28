@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'package:helm/config/router/route_names.dart';
+import 'package:helm/features/auth/data/datasources/biometric_datasource.dart';
 import 'package:helm/core/constants/app_box_names.dart';
 import 'package:helm/core/local_storage/shared_pref_service.dart';
 import 'package:helm/core/security/constants/security_keys.dart';
@@ -302,6 +303,26 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthState(status: AuthStatus.setupRequired);
   }
 
+  /// Authenticates via biometrics. On success, transitions to authenticated
+  /// and resets the failed-attempts counter — same trust level as PIN.
+  Future<bool> unlockViaBiometrics() async {
+    if (state.isLockedOut) return false;
+
+    final datasource = ref.read(biometricDataSourceProvider);
+    final success = await datasource.authenticate('Unlock Helm');
+    if (!_mounted) return false;
+
+    if (success) {
+      await _box.putAll({
+        SecurityKeys.authFailedAttempts: 0,
+        SecurityKeys.authLockoutUntil: null,
+      });
+      _updateSessionAuthenticated(true);
+      state = const AuthState(status: AuthStatus.authenticated);
+    }
+    return success;
+  }
+
   void _updateSessionAuthenticated(bool value) {
     if (authRefreshListenable.value != value) {
       authRefreshListenable.value = value;
@@ -312,6 +333,10 @@ class AuthNotifier extends Notifier<AuthState> {
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
+
+final biometricDataSourceProvider = Provider<BiometricDataSource>(
+  (_) => BiometricDataSource(),
+);
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(
   AuthNotifier.new,
